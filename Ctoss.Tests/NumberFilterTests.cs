@@ -5,7 +5,7 @@ using Ctoss.Tests.Models;
 
 namespace Ctoss.Tests;
 
-public class NumberFilterTests
+public class FilterTests
 {
     private readonly FilterBuilder _filterBuilder = new();
 
@@ -35,7 +35,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.Equals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -59,7 +59,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.GreaterThan
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -83,7 +83,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.GreaterThanOrEqual
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -107,7 +107,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.LessThan
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -131,7 +131,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.LessThanOrEqual
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -156,7 +156,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.InRange
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Condition1 = condition,
@@ -186,7 +186,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.NotEquals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "number",
             Operator = Operator.And,
@@ -219,7 +219,7 @@ public class NumberFilterTests
             Type = NumberFilterOptions.NotEquals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             Operator = Operator.And,
             FilterType = "number",

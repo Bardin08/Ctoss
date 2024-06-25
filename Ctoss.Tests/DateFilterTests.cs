@@ -35,7 +35,7 @@ public class DateFilterTests
             Type = DateFilterOptions.Equals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -59,7 +59,7 @@ public class DateFilterTests
             Type = DateFilterOptions.GreaterThen
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -82,7 +82,7 @@ public class DateFilterTests
             Type = DateFilterOptions.Blank
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -105,7 +105,7 @@ public class DateFilterTests
             Type = DateFilterOptions.LessThen
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -128,7 +128,7 @@ public class DateFilterTests
             Type = DateFilterOptions.NotBlank
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -152,7 +152,7 @@ public class DateFilterTests
             Type = DateFilterOptions.InRange
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Condition1 = condition,
@@ -181,7 +181,7 @@ public class DateFilterTests
             Type = DateFilterOptions.NotEquals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "date",
             Operator = Operator.And,
@@ -214,7 +214,7 @@ public class DateFilterTests
             Type = DateFilterOptions.LessThen
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             Operator = Operator.And,
             FilterType = "date",

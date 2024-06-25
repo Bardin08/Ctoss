@@ -35,7 +35,7 @@ public class TextFilterTests
             Type = TextFilterOptions.Equals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Condition1 = condition,
@@ -59,7 +59,7 @@ public class TextFilterTests
             Type = TextFilterOptions.StartsWith
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Condition1 = condition,
@@ -83,7 +83,7 @@ public class TextFilterTests
             Type = TextFilterOptions.EndsWith
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Condition1 = condition,
@@ -106,7 +106,7 @@ public class TextFilterTests
             Type = TextFilterOptions.NotBlank
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Condition1 = condition,
@@ -129,7 +129,7 @@ public class TextFilterTests
             Type = TextFilterOptions.Contains
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Condition1 = condition,
@@ -159,7 +159,7 @@ public class TextFilterTests
             Type = TextFilterOptions.NotEquals
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             FilterType = "text",
             Operator = Operator.And,
@@ -192,7 +192,7 @@ public class TextFilterTests
             Type = TextFilterOptions.StartsWith
         };
 
-        var filter = new NumberFilter
+        var filter = new Filter
         {
             Operator = Operator.And,
             FilterType = "text",
