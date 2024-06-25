@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ctoss", "Ctoss\Ctoss.csproj", "{F241585F-D3A7-4573-9D21-CA3526270F05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ctoss.Example", "Ctoss.Example\Ctoss.Example.csproj", "{BF1FB2EA-7493-4CB0-9790-EDB4487D0353}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ctoss.Tests", "Ctoss.Tests\Ctoss.Tests.csproj", "{E4AB8A1B-2057-499E-BB12-28D61A5815BE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F241585F-D3A7-4573-9D21-CA3526270F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F241585F-D3A7-4573-9D21-CA3526270F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F241585F-D3A7-4573-9D21-CA3526270F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F241585F-D3A7-4573-9D21-CA3526270F05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF1FB2EA-7493-4CB0-9790-EDB4487D0353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF1FB2EA-7493-4CB0-9790-EDB4487D0353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF1FB2EA-7493-4CB0-9790-EDB4487D0353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF1FB2EA-7493-4CB0-9790-EDB4487D0353}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4AB8A1B-2057-499E-BB12-28D61A5815BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4AB8A1B-2057-499E-BB12-28D61A5815BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4AB8A1B-2057-499E-BB12-28D61A5815BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4AB8A1B-2057-499E-BB12-28D61A5815BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
