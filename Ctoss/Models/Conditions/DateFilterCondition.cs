@@ -2,9 +2,9 @@
 
 namespace Ctoss.Models.Conditions;
 
-public class DateFilterCondition : FilterCondition
+public record DateFilterCondition : FilterCondition
 {
-    public string? DateFrom { get; set; }
-    public string? DateTo { get; set; }
-    public DateFilterOptions? Type { get; set; }
+    public string? DateFrom { get; init; }
+    public string? DateTo { get; init; }
+    public DateFilterOptions? Type { get; init; }
 }

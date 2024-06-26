@@ -1,11 +1,11 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss.Extensions;
+namespace Ctoss;
 
 /// <summary>
 /// Rebinds parameters in expressions to new parameters.
 /// </summary>
-public sealed class ParameterRebinder : ExpressionVisitor
+internal sealed class ParameterRebinder : ExpressionVisitor
 {
     private readonly IDictionary<ParameterExpression, ParameterExpression> _map;
 

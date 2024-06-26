@@ -10,19 +10,6 @@ namespace Ctoss;
 
 public class FilterBuilder
 {
-    private static readonly JsonSerializerOptions JsonOptions = new()
-    {
-        Converters =
-        {
-            new FilterConditionConverter(),
-            new JsonStringEnumConverter<Operator>(),
-            new JsonStringEnumConverter<TextFilterOptions>(),
-            new JsonStringEnumConverter<DateFilterOptions>(),
-            new JsonStringEnumConverter<NumberFilterOptions>()
-        },
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-    };
-
     public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, Filter>? filters)
     {
         if (filters == null)
@@ -35,7 +22,8 @@ public class FilterBuilder
     }
 
     public Expression<Func<T, bool>>? GetExpression<T>(string jsonFilter)
-        => GetExpression<T>(JsonSerializer.Deserialize<Dictionary<string, Filter>>(jsonFilter, JsonOptions));
+        => GetExpression<T>(
+            JsonSerializer.Deserialize<Dictionary<string, Filter>>(jsonFilter, CtossJsonDefaults.DefaultJsonOptions));
 
     public Expression<Func<T, bool>>? GetExpression<T>(string property, Filter filter)
         => GetExpression<T>(new Dictionary<string, Filter> { { property, filter } });

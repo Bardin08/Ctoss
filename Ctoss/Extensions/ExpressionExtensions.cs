@@ -5,7 +5,7 @@ namespace Ctoss.Extensions;
 /// <summary>
 /// Provides extension methods for combining expressions.
 /// </summary>
-public static class ExpressionExtensions
+internal static class ExpressionExtensions
 {
     /// <summary>
     /// Combines two expressions using a logical AND operation.

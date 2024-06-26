@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Ctoss.Json;
 
-public class JsonStringEnumConverter<T> : JsonConverter<T> where T : struct, Enum
+internal class JsonStringEnumConverter<T> : JsonConverter<T> where T : struct, Enum
 {
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
