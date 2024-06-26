@@ -2,5 +2,5 @@
 
 public record FilterCondition
 {
-    public string FilterType { get; init; }
+    public string FilterType { get; init; } = null!;
 }
