@@ -4,7 +4,7 @@ using Ctoss.Models.Conditions;
 
 namespace Ctoss.Json;
 
-public class FilterConditionConverter : JsonConverter<FilterCondition>
+internal class FilterConditionConverter : JsonConverter<FilterCondition>
 {
     public override FilterCondition Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
