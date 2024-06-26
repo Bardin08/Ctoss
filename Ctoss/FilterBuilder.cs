@@ -23,7 +23,7 @@ public class FilterBuilder
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
-    public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, NumberFilter>? filters)
+    public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, Filter>? filters)
     {
         if (filters == null)
             return null;
@@ -35,12 +35,12 @@ public class FilterBuilder
     }
 
     public Expression<Func<T, bool>>? GetExpression<T>(string jsonFilter)
-        => GetExpression<T>(JsonSerializer.Deserialize<Dictionary<string, NumberFilter>>(jsonFilter, JsonOptions));
+        => GetExpression<T>(JsonSerializer.Deserialize<Dictionary<string, Filter>>(jsonFilter, JsonOptions));
 
-    public Expression<Func<T, bool>>? GetExpression<T>(string property, NumberFilter numberFilter)
-        => GetExpression<T>(new Dictionary<string, NumberFilter> { { property, numberFilter } });
+    public Expression<Func<T, bool>>? GetExpression<T>(string property, Filter filter)
+        => GetExpression<T>(new Dictionary<string, Filter> { { property, filter } });
 
-    private Expression<Func<T, bool>> GetExpressionInternal<T>(string property, NumberFilter? filter)
+    private Expression<Func<T, bool>> GetExpressionInternal<T>(string property, Filter? filter)
     {
         if (filter == null)
             return _ => true;
