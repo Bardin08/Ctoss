@@ -1,7 +1,7 @@
 ﻿namespace Ctoss.Models.Conditions;
 
-public class TextFilterCondition : FilterCondition
+public record TextFilterCondition : FilterCondition
 {
-    public string? Filter { get; set; }
-    public Enums.TextFilterOptions Type { get; set; }
+    public string? Filter { get; init; }
+    public Enums.TextFilterOptions Type { get; init; }
 }

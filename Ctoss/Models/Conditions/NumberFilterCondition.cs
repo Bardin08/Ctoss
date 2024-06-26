@@ -2,9 +2,9 @@
 
 namespace Ctoss.Models.Conditions;
 
-public class NumberFilterCondition : FilterCondition
+public record NumberFilterCondition : FilterCondition
 {
-    public decimal? Filter { get; set; }
-    public decimal? FilterTo { get; set; }
-    public NumberFilterOptions? Type { get; set; }
+    public decimal? Filter { get; init; }
+    public decimal? FilterTo { get; init; }
+    public NumberFilterOptions? Type { get; init; }
 }

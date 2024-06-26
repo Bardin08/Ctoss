@@ -1,6 +1,6 @@
 ﻿namespace Ctoss.Models.Conditions;
 
-public class FilterCondition
+public record FilterCondition
 {
-    public string FilterType { get; set; }
+    public string FilterType { get; init; }
 }
