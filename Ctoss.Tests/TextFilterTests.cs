@@ -1,4 +1,5 @@
-﻿using Ctoss.Models;
+﻿using Ctoss.Filters;
+using Ctoss.Models;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
 using Ctoss.Tests.Models;
@@ -13,15 +14,15 @@ public class TextFilterTests
     [
         new TestEntity
         {
-            NumericProperty = 10, StringProperty = "abc", DateTimeProperty = new DateTime(2022, 1, 1)
+            NumericProperty = 10, StringProperty = "abc", DateTimeProperty = new DateOnly(2022, 1, 1)
         },
         new TestEntity
         {
-            NumericProperty = 20, StringProperty = "def", DateTimeProperty = new DateTime(2023, 2, 2)
+            NumericProperty = 20, StringProperty = "def", DateTimeProperty = new DateOnly(2023, 2, 2)
         },
         new TestEntity
         {
-            NumericProperty = 30, StringProperty = "ghi", DateTimeProperty = new DateTime(2024, 3, 3)
+            NumericProperty = 30, StringProperty = "ghi", DateTimeProperty = new DateOnly(2024, 3, 3)
         }
     ];
 
@@ -120,7 +121,7 @@ public class TextFilterTests
     }
 
     [Fact]
-    public void TextFilter__Success()
+    public void TextFilter_Contains_Success()
     {
         var condition = new TextFilterCondition
         {
