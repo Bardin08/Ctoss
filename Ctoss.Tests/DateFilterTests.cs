@@ -1,4 +1,5 @@
-﻿using Ctoss.Models;
+﻿using Ctoss.Filters;
+using Ctoss.Models;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
 using Ctoss.Tests.Models;
