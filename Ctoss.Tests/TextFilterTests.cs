@@ -121,7 +121,7 @@ public class TextFilterTests
     }
 
     [Fact]
-    public void TextFilter__Success()
+    public void TextFilter_Contains_Success()
     {
         var condition = new TextFilterCondition
         {

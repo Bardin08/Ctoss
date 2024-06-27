@@ -14,11 +14,20 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextFilterCondition>
 
         return condition.Type switch
         {
-            TextFilterOptions.Contains => Expression.Lambda<Func<T, bool>>(
-                Expression.Call(propertyExpression, nameof(string.Contains), null, valueExpression), parameter),
-            TextFilterOptions.NotContains => Expression.Lambda<Func<T, bool>>(
-                Expression.Not(
-                    Expression.Call(propertyExpression, nameof(string.Contains), null, valueExpression)), parameter),
+            TextFilterOptions.Contains
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.Call(propertyExpression, nameof(string.Contains), null, valueExpression),
+                    parameter
+                ),
+
+            TextFilterOptions.NotContains
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.Not(
+                        Expression.Call(propertyExpression, nameof(string.Contains), null, valueExpression)
+                    ),
+                    parameter
+                ),
+
             TextFilterOptions.Equals => Expression.Lambda<Func<T, bool>>(
                 Expression.Equal(propertyExpression, valueExpression), parameter),
             TextFilterOptions.NotEquals => Expression.Lambda<Func<T, bool>>(
