@@ -4,7 +4,7 @@ using Ctoss.Extensions;
 const string jsonFilter =
     """
     {
-        "property": {
+        "PROPERTY": {
             "filterType": "date",
             "condition1": {
                 "filterType": "date",
