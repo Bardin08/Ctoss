@@ -31,7 +31,7 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 10,
+            Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.Equals
         };
@@ -55,7 +55,7 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 20,
+            Filter = "20",
             FilterType = "number",
             Type = NumberFilterOptions.GreaterThan
         };
@@ -79,7 +79,7 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 30,
+            Filter = "30",
             FilterType = "number",
             Type = NumberFilterOptions.GreaterThanOrEqual
         };
@@ -103,7 +103,7 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 20,
+            Filter = "20",
             FilterType = "number",
             Type = NumberFilterOptions.LessThan
         };
@@ -127,7 +127,7 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 10,
+            Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.LessThanOrEqual
         };
@@ -151,8 +151,8 @@ public class FilterTests
     {
         var condition = new NumberFilterCondition
         {
-            Filter = 0,
-            FilterTo = 12,
+            Filter = "0",
+            FilterTo = "12",
             FilterType = "number",
             Type = NumberFilterOptions.InRange
         };
@@ -176,13 +176,13 @@ public class FilterTests
     {
         var condition1 = new NumberFilterCondition
         {
-            Filter = 10,
+            Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };
         var condition2 = new NumberFilterCondition
         {
-            Filter = 20,
+            Filter = "20",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };
@@ -204,18 +204,64 @@ public class FilterTests
     }
 
     [Fact]
+    public void NumericFilter_NotBlank_Success()
+    {
+        var condition1 = new NumberFilterCondition
+        {
+            Filter = "10",
+            FilterType = "number",
+            Type = NumberFilterOptions.NotBlank
+        };
+
+        var filter = new Filter
+        {
+            FilterType = "number",
+            Condition1 = condition1,
+            Conditions = new List<FilterCondition> { condition1 }
+        };
+
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var result = _testEntities.AsQueryable().Where(expr).ToList();
+
+        Assert.Equal(3, result.Count);
+    }
+
+    [Fact]
+    public void NumericFilter_Blank_Success()
+    {
+        var condition1 = new NumberFilterCondition
+        {
+            Filter = "10",
+            FilterType = "number",
+            Type = NumberFilterOptions.Blank
+        };
+
+        var filter = new Filter
+        {
+            FilterType = "number",
+            Condition1 = condition1,
+            Conditions = new List<FilterCondition> { condition1 }
+        };
+
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var result = _testEntities.AsQueryable().Where(expr).ToList();
+
+        Assert.Equal(0, result.Count);
+    }
+
+    [Fact]
     public void NumericFilter_Composed_Success()
     {
         var condition1 = new NumberFilterCondition
         {
-            Filter = 25,
+            Filter = "25",
             FilterType = "number",
             Type = NumberFilterOptions.LessThan
         };
 
         var condition2 = new NumberFilterCondition
         {
-            Filter = 10,
+            Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };

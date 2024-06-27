@@ -8,52 +8,150 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
 {
     public Expression<Func<T, bool>> GetExpression<T>(string property, NumberFilterCondition condition)
     {
+        return condition.Type switch
+        {
+            NumberFilterOptions.Blank or NumberFilterOptions.NotBlank or NumberFilterOptions.Empty
+                => GetBlankExpression<T>(property, condition),
+            NumberFilterOptions.InRange
+                => GetRangeExpression<T>(property, condition),
+            _ => GetComparisonExpression<T>(property, condition)
+        };
+    }
+
+    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberFilterCondition condition)
+    {
+        var propertyType = GetPropertyType<T>(property);
+
+        var nullablePropertyType = propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null
+            ? typeof(Nullable<>).MakeGenericType(propertyType)
+            : propertyType;
+
         var parameter = Expression.Parameter(typeof(T), "x");
         var propertyExpression = Expression.Property(parameter, property);
 
+        return condition.Type switch
+        {
+            NumberFilterOptions.Blank
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.Equal(
+                        Expression.Convert(propertyExpression, nullablePropertyType),
+                        Expression.Constant(null, nullablePropertyType)
+                    ), parameter),
+
+            NumberFilterOptions.Empty or NumberFilterOptions.NotBlank
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.NotEqual(
+                        Expression.Convert(propertyExpression, nullablePropertyType),
+                        Expression.Constant(null, nullablePropertyType)
+                    ), parameter),
+
+            _ => throw new NotSupportedException($"Number filter type '{condition.Type}' is not supported.")
+        };
+    }
+
+    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, NumberFilterCondition condition)
+    {
+        if (string.IsNullOrEmpty(condition.Filter))
+            throw new ArgumentException("Filter value is required.");
+
+        if (string.IsNullOrEmpty(condition.FilterTo))
+            throw new ArgumentException("FilterTo value is required.");
+
+        var propertyType = GetPropertyType<T>(property);
+
+        var from = ParseNumericValue(condition.Filter, propertyType);
+        var fromExpression = Expression.Constant(from, propertyType);
+
+        var to = ParseNumericValue(condition.FilterTo, propertyType);
+        var toExpression = Expression.Constant(to, propertyType);
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        var propertyExpression = Expression.Property(parameter, property);
+
+        var greaterThan = Expression.GreaterThan(propertyExpression, fromExpression);
+        var lessThan = Expression.LessThan(propertyExpression, toExpression);
+
+        return Expression.Lambda<Func<T, bool>>(
+            Expression.AndAlso(greaterThan, lessThan),
+            parameter
+        );
+    }
+
+    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, NumberFilterCondition condition)
+    {
+        if (string.IsNullOrEmpty(condition.Filter))
+            throw new ArgumentException("Filter value is required.");
+
+        var propertyType = GetPropertyType<T>(property);
+
+        var from = ParseNumericValue(condition.Filter, propertyType);
+        var fromExpression = Expression.Constant(from, propertyType);
+
+        var parameter = Expression.Parameter(typeof(T), "x");
+        var propertyExpression = Expression.Property(parameter, property);
+
+        return condition.Type switch
+        {
+            NumberFilterOptions.Equals
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.Equal(propertyExpression, fromExpression),
+                    parameter
+                ),
+            NumberFilterOptions.NotEquals
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.NotEqual(propertyExpression, fromExpression),
+                    parameter
+                ),
+            NumberFilterOptions.GreaterThan
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.GreaterThan(propertyExpression, fromExpression),
+                    parameter
+                ),
+            NumberFilterOptions.GreaterThanOrEqual
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.GreaterThanOrEqual(propertyExpression, fromExpression),
+                    parameter
+                ),
+            NumberFilterOptions.LessThan
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.LessThan(propertyExpression, fromExpression),
+                    parameter
+                ),
+            NumberFilterOptions.LessThanOrEqual
+                => Expression.Lambda<Func<T, bool>>(
+                    Expression.LessThanOrEqual(propertyExpression, fromExpression),
+                    parameter
+                ),
+            _ => throw new NotSupportedException($"Number filter type '{condition.Type}' is not supported.")
+        };
+    }
+
+    private static Type GetPropertyType<T>(string property)
+    {
         var propertyType = typeof(T).GetProperty(property)?.PropertyType;
         if (propertyType == null)
             throw new ArgumentException($"Property '{property}' not found on type '{typeof(T).Name}'");
 
-        var filterValue = Convert.ChangeType(condition.Filter, propertyType);
-        var valueExpression = Expression.Constant(filterValue, propertyType);
+        return propertyType;
+    }
 
-        switch (condition.Type)
-        {
-            case NumberFilterOptions.Equals:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.Equal(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.NotEquals:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.NotEqual(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.GreaterThan:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.GreaterThan(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.GreaterThanOrEqual:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.GreaterThanOrEqual(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.LessThan:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.LessThan(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.LessThanOrEqual:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.LessThanOrEqual(propertyExpression, valueExpression), parameter);
-            case NumberFilterOptions.InRange:
-                var filterToValue = Convert.ChangeType(condition.FilterTo, propertyType);
-                var valueToExpression = Expression.Constant(filterToValue, propertyType);
-                var greaterThan = Expression.GreaterThan(propertyExpression, valueExpression);
-                var lessThan = Expression.LessThan(propertyExpression, valueToExpression);
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.AndAlso(greaterThan, lessThan), parameter);
-            case NumberFilterOptions.Blank:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.Equal(propertyExpression, Expression.Constant(null, typeof(decimal?))), parameter);
-            case NumberFilterOptions.Empty:
-            case NumberFilterOptions.NotBlank:
-                return Expression.Lambda<Func<T, bool>>(
-                    Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(decimal?))), parameter);
-            default:
-                throw new NotSupportedException($"Number filter type '{condition.Type}' is not supported.");
-        }
+    private static object ParseNumericValue(string filterValue, Type propertyType)
+    {
+        if (Nullable.GetUnderlyingType(propertyType) is null)
+            return Convert.ChangeType(filterValue, propertyType);
+
+        if (propertyType == typeof(int?)) return int.Parse(filterValue);
+        if (propertyType == typeof(long?)) return long.Parse(filterValue);
+        if (propertyType == typeof(decimal?)) return decimal.Parse(filterValue);
+        if (propertyType == typeof(double?)) return double.Parse(filterValue);
+        if (propertyType == typeof(float?)) return float.Parse(filterValue);
+        if (propertyType == typeof(short?)) return short.Parse(filterValue);
+        if (propertyType == typeof(byte?)) return byte.Parse(filterValue);
+        if (propertyType == typeof(sbyte?)) return sbyte.Parse(filterValue);
+        if (propertyType == typeof(ushort?)) return ushort.Parse(filterValue);
+        if (propertyType == typeof(uint?)) return uint.Parse(filterValue);
+        if (propertyType == typeof(ulong?)) return ulong.Parse(filterValue);
+
+        return Convert.ChangeType(filterValue, propertyType);
     }
 }
