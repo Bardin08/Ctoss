@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using System.Text.Json;
 using Ctoss.Extensions;
 using Ctoss.Json;
@@ -54,11 +55,20 @@ public class FilterBuilder
 
     private Expression<Func<T, bool>> GetFilterExpr<T>(string property, FilterCondition? condition)
     {
+        var normalizedProperty = typeof(T)
+            .GetProperty(property, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+        if (normalizedProperty == null)
+            throw new ArgumentException($"Property {property} not found in type {typeof(T).Name}");
+
         return condition switch
         {
-            TextFilterCondition textCondition => _textFilterBuilder.GetExpression<T>(property, textCondition),
-            DateFilterCondition dateCondition => _dateFilterBuilder.GetExpression<T>(property, dateCondition),
-            NumberFilterCondition numberCondition => _numberFilterBuilder.GetExpression<T>(property, numberCondition),
+            TextFilterCondition textCondition
+                => _textFilterBuilder.GetExpression<T>(normalizedProperty.Name, textCondition),
+            DateFilterCondition dateCondition
+                => _dateFilterBuilder.GetExpression<T>(normalizedProperty.Name, dateCondition),
+            NumberFilterCondition numberCondition
+                => _numberFilterBuilder.GetExpression<T>(normalizedProperty.Name, numberCondition),
             _ => _ => true
         };
     }
