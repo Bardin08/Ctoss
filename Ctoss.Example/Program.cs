@@ -8,6 +8,9 @@ CtossSettingsBuilder.Create()
     .Apply()
     .Entity<ExampleNumericEntity>()
     .Property("virtual", x => x.A + x.B)
+    .Apply()
+    .Entity<ExampleTextEntity>()
+    .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
     .Apply();
 
 const string jsonFilter =
@@ -55,6 +58,27 @@ const string jsonNumericFilter =
     }
     """;
 
+const string jsonTextFilter =
+    """
+    {
+        "TextField": {
+            "filterType": "text",
+            "condition1": {
+                "filterType": "text",
+                "type": "contains",
+                "filter": "a"
+            },
+            "conditions": [
+                {
+                    "filterType": "text",
+                    "type": "contains",
+                    "filter": "a"
+                }
+            ]
+        }
+    }
+    """;
+
 /*
  * The CTOSS gives you three overloads of the method WithFilter which evaluates a given filter and provides you with
  * a filtering Expression<Func<T, bool>> fully compatible with IQueryable and EF.
@@ -78,3 +102,16 @@ var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
     .ToList();
 
 foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}");
+
+Console.WriteLine("\nText entities:");
+
+var textEntity = new ExampleTextEntity()
+{
+    TextField = "abc"
+};
+
+var textEntities = new List<ExampleTextEntity> {textEntity}.AsQueryable()
+    .WithFilter(jsonTextFilter) // <-- This is the extension method from the ctoss library
+    .ToList();
+
+foreach (var entity in textEntities) Console.WriteLine(entity.TextField);

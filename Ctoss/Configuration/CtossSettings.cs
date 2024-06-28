@@ -35,4 +35,20 @@ public static class CtossSettings
         var resultType = binaryExpression.Type;
         return resultType;
     }
+
+    internal static PropertySettings? GetPropertySettings<TEntity>(string propertyName)
+    {
+        var hasTypeConfiguration = TypeSettings.ContainsKey(typeof(TEntity));
+        if (!hasTypeConfiguration)
+            return null;
+
+        var typeSettings = TypeSettings[typeof(TEntity)] as TypeSettings<TEntity>;
+        if (typeSettings == null)
+            return null;
+
+        var hasPropertyConfiguration = typeSettings.PropertySettings.ContainsKey(propertyName);
+        return hasPropertyConfiguration
+            ? typeSettings.PropertySettings[propertyName]
+            : null;
+    }
 }
