@@ -55,20 +55,20 @@ public class FilterBuilder
 
     private Expression<Func<T, bool>> GetFilterExpr<T>(string property, FilterCondition? condition)
     {
+        // NOTE: first of all, we're trying to get a real property name from the given one.
+        // If we find it, we can use it to work with an expression. Else the given property name will be used.
         var normalizedProperty = typeof(T)
             .GetProperty(property, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
-        if (normalizedProperty == null)
-            throw new ArgumentException($"Property {property} not found in type {typeof(T).Name}");
-
+        var propertyName = normalizedProperty?.Name ?? property;
         return condition switch
         {
             TextFilterCondition textCondition
-                => _textFilterBuilder.GetExpression<T>(normalizedProperty.Name, textCondition),
+                => _textFilterBuilder.GetExpression<T>(propertyName, textCondition),
             DateFilterCondition dateCondition
-                => _dateFilterBuilder.GetExpression<T>(normalizedProperty.Name, dateCondition),
+                => _dateFilterBuilder.GetExpression<T>(propertyName, dateCondition),
             NumberFilterCondition numberCondition
-                => _numberFilterBuilder.GetExpression<T>(normalizedProperty.Name, numberCondition),
+                => _numberFilterBuilder.GetExpression<T>(propertyName, numberCondition),
             _ => _ => true
         };
     }

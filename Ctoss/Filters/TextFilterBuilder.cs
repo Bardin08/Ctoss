@@ -9,7 +9,8 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextFilterCondition>
     public Expression<Func<T, bool>> GetExpression<T>(string property, TextFilterCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = Expression.Property(parameter, property);
+        var propertyExpression = IPropertyFilterBuilder<T>
+            .GetPropertyExpression<T>(property, parameter, typeof(string));
         var valueExpression = Expression.Constant(condition.Filter);
 
         return condition.Type switch
