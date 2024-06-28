@@ -1,6 +1,8 @@
 ﻿using Ctoss.Configuration;
 using Ctoss.Example;
 using Ctoss.Extensions;
+using Ctoss.Models;
+using Ctoss.Models.Enums;
 
 CtossSettingsBuilder.Create()
     .Entity<ExampleEntity>()
@@ -97,8 +99,24 @@ foreach (var entity in entities) Console.WriteLine(entity.Property);
 
 Console.WriteLine("\nNumeric entities:");
 
+var sortings = new List<Sorting>()
+{
+    new()
+    {
+        Property = "A",
+        Order = SortingOrder.Asc
+    },
+    new()
+    {
+        Property = "B",
+        Order = SortingOrder.Desc
+    },
+};
+
 var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
     .WithFilter(jsonNumericFilter) // <-- This is the extension method from the ctoss library
+    .WithSorting(sortings)
+    .WithPagination(1, 10)
     .ToList();
 
 foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}");

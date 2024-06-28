@@ -7,7 +7,7 @@ using Ctoss.Models;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
 
-namespace Ctoss.Filters;
+namespace Ctoss.Builders.Filters;
 
 public class FilterBuilder
 {
