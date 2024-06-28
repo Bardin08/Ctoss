@@ -2,8 +2,6 @@
 
 public class CtossSettingsBuilder
 {
-    private readonly CtossSettings _settings = new();
-
     private CtossSettingsBuilder()
     {
     }
@@ -17,9 +15,7 @@ public class CtossSettingsBuilder
 
     internal CtossSettingsBuilder AddSettings<TEntity>(TypeSettings<TEntity> typeSettings)
     {
-        _settings.TypeSettings[typeof(TEntity)] = typeSettings;
+        CtossSettings.TypeSettings[typeof(TEntity)] = typeSettings;
         return this;
     }
-
-    public CtossSettings Build() => _settings;
 }

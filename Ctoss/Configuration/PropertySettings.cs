@@ -1,22 +1,23 @@
 ﻿namespace Ctoss.Configuration;
 
 /// <summary>
-/// Represents the settings for a specific property of type <typeparamref name="TProp"/>.
+/// Represents the settings for a specific property.
 /// </summary>
-/// <typeparam name="TProp">The type of the property.</typeparam>
-public class PropertySettings<TProp> : IPropertySettings
+public class PropertySettings
 {
     /// <summary>
-    /// Gets or sets the custom converter function that converts a string to the property type <typeparamref name="TProp"/>.
+    /// Gets or sets a value indicating whether the property is required.
     /// </summary>
     /// <value>
-    /// A function that converts a string to the property type <typeparamref name="TProp"/>. The function should accept a string parameter and return a value of type <typeparamref name="TProp"/>.
+    /// <c>true</c> if the property is required; otherwise, <c>false</c>.
     /// </value>
-    public Func<string, TProp>? CustomConverter { get; set; }
-
-    /// <inheritdoc />
     public bool Required { get; set; }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets a value indicating whether the case should be ignored when resolving the property.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> if the case should be ignored; otherwise, <c>false</c>.
+    /// </value>
     public bool IgnoreCase { get; set; }
 }
