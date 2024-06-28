@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Ctoss.Configuration;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
 
@@ -9,8 +10,11 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextFilterCondition>
     public Expression<Func<T, bool>> GetExpression<T>(string property, TextFilterCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = Expression.Property(parameter, property);
+        var propertyExpression = IPropertyFilterBuilder<T>
+            .GetPropertyExpression<T>(property, parameter, typeof(string));
         var valueExpression = Expression.Constant(condition.Filter);
+
+        ApplyPropertySettings<T>(property, ref propertyExpression, ref valueExpression);
 
         return condition.Type switch
         {
@@ -42,5 +46,29 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextFilterCondition>
                 Expression.NotEqual(propertyExpression, Expression.Constant(null, typeof(string))), parameter),
             _ => _ => true
         };
+    }
+
+    private static void ApplyPropertySettings<T>(
+        string property,
+        ref UnaryExpression propertyExpression,
+        ref ConstantExpression valueExpression)
+    {
+        var propertySettings = CtossSettings.GetPropertySettings<T>(property);
+        if (propertySettings is not { IgnoreCase: true })
+        {
+            return;
+        }
+
+        var memberExpression = (MemberExpression)propertyExpression.Operand;
+
+        var propertyToUpper = Expression.Call(memberExpression, nameof(string.ToUpper), Type.EmptyTypes);
+        propertyExpression = Expression.Convert(propertyToUpper, typeof(string));
+
+        if (valueExpression.Value is not string value)
+        {
+            return;
+        }
+
+        valueExpression = Expression.Constant(value.ToUpper());
     }
 }

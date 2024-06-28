@@ -1,10 +1,22 @@
-﻿using Ctoss.Example;
+﻿using Ctoss.Configuration;
+using Ctoss.Example;
 using Ctoss.Extensions;
+
+CtossSettingsBuilder.Create()
+    .Entity<ExampleEntity>()
+    .Property("Property", x => x.Property + x.Property2, p => { p.IgnoreCase = true; })
+    .Apply()
+    .Entity<ExampleNumericEntity>()
+    .Property("virtual", x => x.A + x.B)
+    .Apply()
+    .Entity<ExampleTextEntity>()
+    .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
+    .Apply();
 
 const string jsonFilter =
     """
     {
-        "PROPERTY": {
+        "PrOpErTy": {
             "filterType": "date",
             "condition1": {
                 "filterType": "date",
@@ -24,6 +36,49 @@ const string jsonFilter =
     }
     """;
 
+const string jsonNumericFilter =
+    """
+    {
+        "virtual": {
+            "filterType": "number",
+            "condition1": {
+                "filterType": "number",
+                "type": "inRange",
+                "filter": "10",
+                "filterTo": "70"
+            },
+            "conditions": [
+                {
+                    "filterType": "number",
+                    "type": "GreaterThan",
+                    "filter": "10"
+                }
+            ]
+        }
+    }
+    """;
+
+const string jsonTextFilter =
+    """
+    {
+        "TextField": {
+            "filterType": "text",
+            "condition1": {
+                "filterType": "text",
+                "type": "contains",
+                "filter": "a"
+            },
+            "conditions": [
+                {
+                    "filterType": "text",
+                    "type": "contains",
+                    "filter": "a"
+                }
+            ]
+        }
+    }
+    """;
+
 /*
  * The CTOSS gives you three overloads of the method WithFilter which evaluates a given filter and provides you with
  * a filtering Expression<Func<T, bool>> fully compatible with IQueryable and EF.
@@ -33,12 +88,30 @@ const string jsonFilter =
  * - WithFilter<T>(this IQueryable<T> query, string propertyName, Filter filter)
  * - WithFilter<T>(this IQueryable<T> query, Dictionary<string, Filter> filters)
  */
-var entities = ExampleEntityFaker.GetN(10).AsQueryable()
+var entities = ExampleEntityFaker.GetN(100).AsQueryable()
     .WithFilter(jsonFilter) // <-- This is the extension method from the ctoss library
     .ToList();
 
 Console.WriteLine("Filtered entities:");
-foreach (var entity in entities)
+foreach (var entity in entities) Console.WriteLine(entity.Property);
+
+Console.WriteLine("\nNumeric entities:");
+
+var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
+    .WithFilter(jsonNumericFilter) // <-- This is the extension method from the ctoss library
+    .ToList();
+
+foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}");
+
+Console.WriteLine("\nText entities:");
+
+var textEntity = new ExampleTextEntity()
 {
-    Console.WriteLine(entity.Property);
-}
+    TextField = "abc"
+};
+
+var textEntities = new List<ExampleTextEntity> {textEntity}.AsQueryable()
+    .WithFilter(jsonTextFilter) // <-- This is the extension method from the ctoss library
+    .ToList();
+
+foreach (var entity in textEntities) Console.WriteLine(entity.TextField);

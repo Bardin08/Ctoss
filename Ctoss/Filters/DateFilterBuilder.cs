@@ -20,14 +20,14 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
 
     private Expression<Func<T, bool>> GetBlankExpression<T>(string property, DateFilterCondition condition)
     {
-        var propertyType = GetPropertyType<T>(property);
+        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
 
         var nullablePropertyType = propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null
             ? typeof(Nullable<>).MakeGenericType(propertyType)
             : propertyType;
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = Expression.Property(parameter, property);
+        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
 
         return condition.Type switch
         {
@@ -47,10 +47,11 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
 
     private Expression<Func<T, bool>> GetRangeExpression<T>(string property, DateFilterCondition condition)
     {
-        var propertyType = GetPropertyType<T>(property);
+        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = Expression.Property(parameter, property);
+
+        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
 
         if (string.IsNullOrEmpty(condition.DateFrom))
             throw new ArgumentException("DateFrom value is required.");
@@ -74,11 +75,9 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
     private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, DateFilterCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = Expression.Property(parameter, property);
 
-        var propertyType = typeof(T).GetProperty(property)?.PropertyType;
-        if (propertyType == null)
-            throw new ArgumentException($"Property '{property}' not found on type '{typeof(T).Name}'");
+        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
+        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
 
         if (string.IsNullOrEmpty(condition.DateFrom))
             throw new ArgumentException("DateFrom value is required.");
@@ -102,15 +101,6 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
                     Expression.GreaterThan(propertyExpression, dateFromExpression), parameter),
             _ => throw new NotSupportedException($"Date filter type '{condition.Type}' is not supported.")
         };
-    }
-
-    private static Type GetPropertyType<T>(string property)
-    {
-        var propertyType = typeof(T).GetProperty(property)?.PropertyType;
-        if (propertyType == null)
-            throw new ArgumentException($"Property '{property}' not found on type '{typeof(T).Name}'");
-
-        return propertyType;
     }
 
     private static object ParseDateValue(string filterValue, Type propertyType)
