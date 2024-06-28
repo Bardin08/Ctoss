@@ -13,7 +13,8 @@ public static class CtossJsonDefaults
             new JsonStringEnumConverter<Operator>(),
             new JsonStringEnumConverter<TextFilterOptions>(),
             new JsonStringEnumConverter<DateFilterOptions>(),
-            new JsonStringEnumConverter<NumberFilterOptions>()
+            new JsonStringEnumConverter<NumberFilterOptions>(),
+            new JsonStringEnumConverter<SortingOrder>()
         },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };

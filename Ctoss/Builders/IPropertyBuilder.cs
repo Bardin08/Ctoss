@@ -2,12 +2,10 @@
 using Ctoss.Configuration;
 using Ctoss.Expressions;
 
-namespace Ctoss.Filters;
+namespace Ctoss.Builders;
 
-public interface IPropertyFilterBuilder<in TCondition>
+internal interface IPropertyBuilder
 {
-    Expression<Func<T, bool>> GetExpression<T>(string property, TCondition condition);
-
     static UnaryExpression GetPropertyExpression<T>(
         string property,
         ParameterExpression parameter,

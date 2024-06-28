@@ -1,4 +1,4 @@
-﻿using Ctoss.Filters;
+﻿using Ctoss.Builders.Filters;
 using Ctoss.Models;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
