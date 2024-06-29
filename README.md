@@ -32,6 +32,26 @@ For simple scenarios, users can start without any specific configuration when th
 
 CTOSS is highly configurable. Below is an example of configuring the CTOSS settings for different entities.
 
+
+```csharp
+using Ctoss.Configuration;
+using Ctoss.Example;
+using Ctoss.Extensions;
+using Ctoss.Models;
+using Ctoss.Models.Enums;
+
+CtossSettingsBuilder.Create()
+    .Entity<ExampleEntity>()
+        .Property("Property", x => x.Property + x.Property2, p => { p.IgnoreCase = true; })
+        .Apply()
+    .Entity<ExampleNumericEntity>()
+        .Property("virtual", x => x.A + x.B)
+        .Apply()
+    .Entity<ExampleTextEntity>()
+        .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
+        .Apply();
+```
+
 NOTE: in the first scenario, `Property` overrides the default property mapping, and on the filter, instead of a plain `Property` value, a result of the given expression will be used. 
 
 ### Usage
