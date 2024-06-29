@@ -1,6 +1,6 @@
-﻿# CTOSS Library
+## Introduction
 
-CTOSS (Customizable Table Object Sorting and Searching) is an advanced filtering library built for seamless integration with AgGrid but can also be used as a standalone tool. It is designed to consume JSON or POCO models and supports filtering for numbers, strings, and dates. Future updates will include support for other AgGrid filter types.
+CTOSS (Customizable Table Object Sorting and Searching) is an advanced filtering library built for seamless integration with AgGrid but can also be used as a standalone tool. It is designed to consume JSON or POCO models and convert them to filtering, sorting, or pagination expressions for numbers, strings, and dates. CTOSS works with all major datatypes from the CTS (Common Type System).
 
 <table width="100%" border="0">
 <tr>
@@ -12,24 +12,59 @@ CTOSS (Customizable Table Object Sorting and Searching) is an advanced filtering
 
 ## Key Features
 
-- **Seamless Integration with AgGrid**: Effortlessly add advanced filtering to your AgGrid instances.
-- **Standalone Usage**: Can be used independently of AgGrid for custom filtering needs.
-- **Multiple Data Types**: Supports filtering for numbers, strings, and dates.
-- **Extensible**: Future updates will support additional AgGrid filter types.
+- **Seamless Integration with AgGrid**: Effortlessly add advanced filtering for server-side AgGrid data sources and the EF Core-controlled databases.
+- **Standalone Usage**: This can be used independently of AgGrid for custom filtering needs for in-memory collections or databases via Entity Framework.
+- **Multiple Data Types**: Supports all major data types (numbers, dates, and strings) from CTS.
 
-## How it Works
+## Installation
 
-CTOSS works by consuming JSON or POCO models and applying the specified filters.
-It integrates supports the AgGrid models to provide a user-friendly interface for defining and applying these 
-filters. When used as a standalone tool, it offers a flexible API for advanced data manipulation.
+To install the CTOSS library, use the following NuGet command:
 
-## Usage
+```bash
+dotnet add package Ctoss
+```
 
-TBA
+## Getting Started
+
+For simple scenarios, users can start without any specific configuration when the JSON or POCO model property has the same name (case doesn't matter) as in the Entity or DTO. In this case, CTOSS can process the filtering, sorting, or pagination behind the scenes.
+
+### Configuration
+
+CTOSS is highly configurable. Below is an example of configuring the CTOSS settings for different entities.
+
+
+```csharp
+using Ctoss.Configuration;
+using Ctoss.Example;
+using Ctoss.Extensions;
+using Ctoss.Models;
+using Ctoss.Models.Enums;
+
+CtossSettingsBuilder.Create()
+    .Entity<ExampleEntity>()
+        .Property("Property", x => x.Property + x.Property2, p => { p.IgnoreCase = true; })
+        .Apply()
+    .Entity<ExampleNumericEntity>()
+        .Property("virtual", x => x.A + x.B)
+        .Apply()
+    .Entity<ExampleTextEntity>()
+        .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
+        .Apply();
+```
+
+NOTE: in the first scenario, `Property` overrides the default property mapping, and on the filter, instead of a plain `Property` value, a result of the given expression will be used. 
+
+### Usage
+
+CTOSS provides three extension methods and a bunch of overloads for them. 
+`WithFilter` evaluates a given filter and provides a filtering expression.
+`WithPagination`, which applies pagination to the result set of entities.  
+`WithSorting` applies sorting to the given set of entities. It can be a chain of more than one sorting.
+All methods are fully compatible with `IEnumerable`, `IQueryable`, and Entity Framework (EF).
 
 ## Contributions
 
-Contributions are welcome! Feel free to submit pull requests or open issues if you encounter any problems or have suggestions for improvements.
+Contributions are welcome! If you encounter problems or have suggestions for improvements, feel free to submit pull requests or open issues.
 
 ## License
 
