@@ -1,4 +1,5 @@
 ﻿using Ctoss.Configuration;
+using Ctoss.Configuration.Builders;
 using Ctoss.Example;
 using Ctoss.Extensions;
 using Ctoss.Models;
@@ -9,7 +10,8 @@ CtossSettingsBuilder.Create()
     .Property("Property", x => x.Property + x.Property2, p => { p.IgnoreCase = true; })
     .Apply()
     .Entity<ExampleNumericEntity>()
-    .Property("virtual", x => x.A + x.B)
+    .Property("virtual", x =>
+        (x.SubEntity == null ? -1 : x.SubEntity.A) + (x.SubEntity == null ? -1 : x.SubEntity.B))
     .Apply()
     .Entity<ExampleTextEntity>()
     .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
@@ -46,8 +48,8 @@ const string jsonNumericFilter =
             "condition1": {
                 "filterType": "number",
                 "type": "inRange",
-                "filter": "10",
-                "filterTo": "70"
+                "filter": "1",
+                "filterTo": "20"
             },
             "conditions": [
                 {
@@ -114,7 +116,7 @@ var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
     .WithPagination(1, 10)
     .ToList();
 
-foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}, Total = {entity.A + entity.B}");
+foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}, SubEntity = ({entity.SubEntity.A + entity.SubEntity.B})");
 
 Console.WriteLine("\nText entities:");
 
