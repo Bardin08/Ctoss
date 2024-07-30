@@ -4,4 +4,5 @@ public class ExampleNumericEntity
 {
     public int A { get; set; }
     public int B { get; set; }
+    public ExampleNumericEntity? SubEntity { get; set; }
 }

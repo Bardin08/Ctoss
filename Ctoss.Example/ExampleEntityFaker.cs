@@ -15,7 +15,12 @@ internal class ExampleNumericEntityFaker : Faker<ExampleNumericEntity>
 {
     private static readonly Faker<ExampleNumericEntity> Faker = new ExampleNumericEntityFaker()
         .RuleFor(x => x.A, f => f.Random.Int(0, 100))
-        .RuleFor(x => x.B, f => f.Random.Int(0, 100));
+        .RuleFor(x => x.B, f => f.Random.Int(0, 100))
+        .RuleFor(x => x.SubEntity, f => new ExampleNumericEntity
+        {
+            A = f.Random.Int(0, 100),
+            B = f.Random.Int(0, 100)
+        });
 
     public static IQueryable<ExampleNumericEntity> GetN(int n) => Faker.GenerateLazy(n).AsQueryable();
 }
