@@ -12,9 +12,10 @@ CtossSettingsBuilder.Create()
     .Entity<ExampleNumericEntity>()
     .Property("virtual", x =>
         (x.SubEntity == null ? -1 : x.SubEntity.A) + (x.SubEntity == null ? -1 : x.SubEntity.B))
+    .Property("mc", x => int.Parse(x.A.ToString()))
     .Apply()
     .Entity<ExampleTextEntity>()
-    .Property(x => x.TextField, settings => { settings.IgnoreCase = true;})
+    .Property(x => x.TextField, settings => { settings.IgnoreCase = true; })
     .Apply();
 
 const string jsonFilter =
@@ -43,7 +44,7 @@ const string jsonFilter =
 const string jsonNumericFilter =
     """
     {
-        "virtual": {
+        "mc": {
             "filterType": "number",
             "condition1": {
                 "filterType": "number",
@@ -116,7 +117,8 @@ var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
     .WithPagination(1, 10)
     .ToList();
 
-foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}, SubEntity = ({entity.SubEntity.A + entity.SubEntity.B})");
+foreach (var entity in numericEntities)
+    Console.WriteLine($"A: {entity.A}, B: {entity.B}, SubEntity = ({entity.SubEntity.A + entity.SubEntity.B})");
 
 Console.WriteLine("\nText entities:");
 
@@ -125,7 +127,7 @@ var textEntity = new ExampleTextEntity()
     TextField = "abc"
 };
 
-var textEntities = new List<ExampleTextEntity> {textEntity}.AsQueryable()
+var textEntities = new List<ExampleTextEntity> { textEntity }.AsQueryable()
     .WithFilter(jsonTextFilter) // <-- This is the extension method from the ctoss library
     .ToList();
 
