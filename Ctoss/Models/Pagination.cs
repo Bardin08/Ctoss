@@ -1,7 +1,7 @@
-﻿namespace Ctoss.Models;
+namespace Ctoss.Models;
 
-public class Pagination
+public record Pagination
 {
-    public int Page { get; set; }
-    public int PageSize { get; set; }
+    public int StartRow { get; init; }
+    public int EndRow { get; init; }
 }

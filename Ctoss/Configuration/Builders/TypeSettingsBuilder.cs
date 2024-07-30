@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss.Configuration;
+namespace Ctoss.Configuration.Builders;
 
 public class TypeSettingsBuilder<TEntity>
 {

@@ -1,4 +1,4 @@
-﻿namespace Ctoss.Configuration;
+﻿namespace Ctoss.Configuration.Builders;
 
 public class CtossSettingsBuilder
 {

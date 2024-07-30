@@ -1,8 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.Json;
 using Ctoss.Extensions;
-using Ctoss.Json;
 using Ctoss.Models;
 using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
@@ -25,10 +23,6 @@ public class FilterBuilder
         expressions.AddRange(filters.Select(filter => GetExpressionInternal<T>(filter.Key, filter.Value)));
         return expressions.Aggregate((acc, expr) => acc.AndAlso(expr));
     }
-
-    public Expression<Func<T, bool>>? GetExpression<T>(string jsonFilter)
-        => GetExpression<T>(
-            JsonSerializer.Deserialize<Dictionary<string, Filter>>(jsonFilter, CtossJsonDefaults.DefaultJsonOptions));
 
     public Expression<Func<T, bool>>? GetExpression<T>(string property, Filter filter)
         => GetExpression<T>(new Dictionary<string, Filter> { { property, filter } });
