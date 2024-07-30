@@ -20,14 +20,14 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
 
     private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberFilterCondition condition)
     {
-        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
+        var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
         var nullablePropertyType = propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null
             ? typeof(Nullable<>).MakeGenericType(propertyType)
             : propertyType;
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
 
         return condition.Type switch
         {
@@ -57,7 +57,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         if (string.IsNullOrEmpty(condition.FilterTo))
             throw new ArgumentException("FilterTo value is required.");
 
-        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
+        var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
         var from = ParseNumericValue(condition.Filter, propertyType);
         var fromExpression = Expression.Constant(from, propertyType);
@@ -66,7 +66,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         var toExpression = Expression.Constant(to, propertyType);
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
 
         var greaterThan = Expression.GreaterThan(propertyExpression, fromExpression);
         var lessThan = Expression.LessThan(propertyExpression, toExpression);
@@ -82,13 +82,13 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         if (string.IsNullOrEmpty(condition.Filter))
             throw new ArgumentException("Filter value is required.");
 
-        var propertyType = IPropertyFilterBuilder<T>.GetPropertyType<T>(property);
+        var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
         var from = ParseNumericValue(condition.Filter, propertyType);
         var fromExpression = Expression.Constant(from, propertyType);
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyFilterBuilder<T>.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
 
         return condition.Type switch
         {
