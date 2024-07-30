@@ -29,11 +29,16 @@ public static class CtossSettings
         if (propertyMapping == null)
             return null;
 
-        var unaryExpression = (UnaryExpression)propertyMapping.Body;
-        var binaryExpression = (BinaryExpression)unaryExpression.Operand;
+        var expression = propertyMapping.Body;
 
-        var resultType = binaryExpression.Type;
-        return resultType;
+        return expression switch
+        {
+            UnaryExpression unaryExpression => unaryExpression.Operand.Type,
+            BinaryExpression binaryExpression => binaryExpression.Type,
+            MethodCallExpression methodCallExpression => methodCallExpression.Method.ReturnType,
+            MemberExpression memberExpression => memberExpression.Type,
+            _ => throw new InvalidOperationException($"Unhandled expression type: {expression.GetType().Name}")
+        };
     }
 
     internal static PropertySettings? GetPropertySettings<TEntity>(string propertyName)
