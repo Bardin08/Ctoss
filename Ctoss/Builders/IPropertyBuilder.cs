@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using Ctoss.Configuration;
 using Ctoss.Expressions;
 
@@ -6,6 +7,24 @@ namespace Ctoss.Builders;
 
 internal interface IPropertyBuilder
 {
+    static UnaryExpression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
+    {
+        // NOTE: first of all, we're trying to get a real property name from the given one.
+        // If we find it, we can use it to work with an expression. Else the given property name will be used.
+        var normalizedProperty = typeof(T)
+            .GetProperty(property, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+        var propertyName = normalizedProperty?.Name ?? property;
+
+        var propertyType = GetPropertyType<T>(propertyName);
+
+        var nullablePropertyType = propertyType.IsValueType && Nullable.GetUnderlyingType(propertyType) == null
+            ? typeof(Nullable<>).MakeGenericType(propertyType)
+            : propertyType;
+        
+        return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType);
+    }
+    
     static UnaryExpression GetPropertyExpression<T>(
         string property,
         ParameterExpression parameter,

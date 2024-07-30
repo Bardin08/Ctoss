@@ -34,9 +34,11 @@ public static class EnumerableExtensions
         for (var i = 0; i < sortings.Count; i++)
         {
             var sorting = sortings[i];
-            var sortingExpression = sortingBuilder.BuildSortingExpression<T>(sorting);
-            var sortingFunc = sortingExpression.Compile();
+            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting);
+            if (sortingExpression is null)
+                continue;
 
+            var sortingFunc = sortingExpression.Compile();
             if (i == 0)
             {
                 orderedEnumerable = sorting.Order == SortingOrder.Asc

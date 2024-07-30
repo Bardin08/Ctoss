@@ -99,17 +99,12 @@ foreach (var entity in entities) Console.WriteLine(entity.Property);
 
 Console.WriteLine("\nNumeric entities:");
 
-var sortings = new List<Sorting>()
+var sortings = new List<Sorting>
 {
     new()
     {
-        Property = "A",
+        Property = "virtual",
         Order = SortingOrder.Asc
-    },
-    new()
-    {
-        Property = "B",
-        Order = SortingOrder.Desc
     },
 };
 
@@ -119,7 +114,7 @@ var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
     .WithPagination(1, 10)
     .ToList();
 
-foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}");
+foreach (var entity in numericEntities) Console.WriteLine($"A: {entity.A}, B: {entity.B}, Total = {entity.A + entity.B}");
 
 Console.WriteLine("\nText entities:");
 

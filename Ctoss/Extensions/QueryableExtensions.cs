@@ -34,8 +34,10 @@ public static class QueryableExtensions
         for (var i = 0; i < sortings.Count; i++)
         {
             var sorting = sortings[i];
-            var sortingExpression = sortingBuilder.BuildSortingExpression<T>(sorting);
-
+            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting);
+            if (sortingExpression is null)
+                continue;
+            
             if (i == 0)
             {
                 orderedQuery = sorting.Order == SortingOrder.Asc
