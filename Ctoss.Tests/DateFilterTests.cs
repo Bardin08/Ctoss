@@ -1,7 +1,6 @@
 ﻿using Ctoss.Builders.Filters;
-using Ctoss.Models;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 using Ctoss.Tests.Models;
 
 namespace Ctoss.Tests;
@@ -12,35 +11,19 @@ public class DateFilterTests
 
     private readonly List<TestEntity> _testEntities =
     [
-        new TestEntity
-        {
-            NumericProperty = 10, StringProperty = "abc", DateTimeProperty = new DateOnly(2022, 1, 1)
-        },
-        new TestEntity
-        {
-            NumericProperty = 20, StringProperty = "def", DateTimeProperty = new DateOnly(2023, 2, 2)
-        },
-        new TestEntity
-        {
-            NumericProperty = 30, StringProperty = "ghi", DateTimeProperty = new DateOnly(2024, 3, 3)
-        }
+        new TestEntity(numericProperty: 10, stringProperty: "abc", dateTimeProperty: new DateOnly(2022, 1, 1)),
+        new TestEntity(numericProperty: 20, stringProperty: "def", dateTimeProperty: new DateOnly(2023, 2, 2)),
+        new TestEntity(numericProperty: 30, stringProperty: "ghi", dateTimeProperty: new DateOnly(2024, 3, 3))
     ];
 
     [Fact]
     public void DateFilter_Equals_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
+            FilterType = "date",
             DateFrom = "01/01/2022",
-            FilterType = "date",
-            Type = DateFilterOptions.Equals
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "equals"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -53,18 +36,11 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_GreaterThen_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
+            FilterType = "date",
             DateFrom = "02/02/2023",
-            FilterType = "date",
-            Type = DateFilterOptions.GreaterThen
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "GreaterThen"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -77,17 +53,10 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_Blank_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
             FilterType = "date",
-            Type = DateFilterOptions.Blank
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "Blank"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -99,18 +68,11 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_LessThen_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
+            FilterType = "date",
             DateFrom = "01/01/2023",
-            FilterType = "date",
-            Type = DateFilterOptions.LessThen
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "LessThen"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -123,17 +85,10 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_NotBlank_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
             FilterType = "date",
-            Type = DateFilterOptions.NotBlank
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "NotBlank"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -145,19 +100,12 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_InRange_Success()
     {
-        var condition = new DateFilterCondition
+        var filter = new FilterModel
         {
+            FilterType = "date",
             DateFrom = "06/06/2021",
             DateTo = "09/09/2024",
-            FilterType = "date",
-            Type = DateFilterOptions.InRange
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "date",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "InRange"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -169,26 +117,24 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_NotEquals_Success()
     {
-        var condition1 = new DateFilterCondition
+        var condition1 = new DateCondition
         {
             DateFrom = "01/01/2022",
             FilterType = "date",
             Type = DateFilterOptions.NotEquals
         };
-        var condition2 = new DateFilterCondition
+        var condition2 = new DateCondition
         {
             DateFrom = "03/03/2024",
             FilterType = "date",
             Type = DateFilterOptions.NotEquals
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
             FilterType = "date",
             Operator = Operator.And,
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition> { condition1, condition2 }
+            Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -201,27 +147,25 @@ public class DateFilterTests
     [Fact]
     public void DateFilter_Composed_Success()
     {
-        var condition1 = new DateFilterCondition
+        var condition1 = new DateCondition
         {
             DateFrom = "01/01/2022",
             FilterType = "date",
             Type = DateFilterOptions.NotEquals
         };
 
-        var condition2 = new DateFilterCondition
+        var condition2 = new DateCondition
         {
             DateFrom = "03/03/2024",
             FilterType = "date",
             Type = DateFilterOptions.LessThen
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
-            Operator = Operator.And,
             FilterType = "date",
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition>
+            Operator = Operator.And,
+            Conditions = new List<FilterConditionBase>
             {
                 condition1, condition2
             }

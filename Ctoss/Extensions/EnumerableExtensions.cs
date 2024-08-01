@@ -4,6 +4,7 @@ using Ctoss.Builders.Sorting;
 using Ctoss.Json;
 using Ctoss.Models;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 
 namespace Ctoss.Extensions;
 
@@ -70,24 +71,29 @@ public static class EnumerableExtensions
     public static IEnumerable<T> WithFilter<T>(
         this IEnumerable<T> query, string jsonFilter) =>
         query.WithFilter(
-            JsonSerializer.Deserialize<Dictionary<string, Filter>>(
+            JsonSerializer.Deserialize<AgGridFilter>(
                 jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
         );
 
     public static IEnumerable<T> WithFilter<T>(
-        this IEnumerable<T> query, string propertyName, Filter? filter) =>
+        this IEnumerable<T> query, string propertyName, FilterModel? filter) =>
         filter is null
             ? query
-            : WithFilter(query, new Dictionary<string, Filter> { { propertyName, filter } });
+            : WithFilter(
+                query,
+                new AgGridFilter
+                {
+                    Filters = new Dictionary<string, FilterModel> { { propertyName, filter } }
+                });
 
     public static IEnumerable<T> WithFilter<T>(
-        this IEnumerable<T> query, Dictionary<string, Filter>? filters)
+        this IEnumerable<T> query, AgGridFilter? filterSet)
     {
-        if (filters is null || !filters.Any())
+        if (filterSet is null || !filterSet.Filters.Any())
             return query;
 
         var filterBuilder = new FilterBuilder();
-        var predicate = filterBuilder.GetExpression<T>(filters);
+        var predicate = filterBuilder.GetExpression<T>(filterSet);
 
         if (predicate is null)
             throw new ArgumentException("Invalid filter");

@@ -1,7 +1,6 @@
 ﻿using Ctoss.Builders.Filters;
-using Ctoss.Models;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 using Ctoss.Tests.Models;
 
 namespace Ctoss.Tests;
@@ -29,18 +28,11 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_Equals_Success()
     {
-        var condition = new TextFilterCondition
+        var filter = new FilterModel
         {
             Filter = "abc",
             FilterType = "text",
-            Type = TextFilterOptions.Equals
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "text",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "Equals"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -53,18 +45,11 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_StartsWith_Success()
     {
-        var condition = new TextFilterCondition
+        var filter = new FilterModel
         {
             Filter = "a",
             FilterType = "text",
-            Type = TextFilterOptions.StartsWith
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "text",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "StartsWith"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -77,18 +62,11 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_EndsWith_Success()
     {
-        var condition = new TextFilterCondition
+        var filter = new FilterModel
         {
             Filter = "c",
             FilterType = "text",
-            Type = TextFilterOptions.EndsWith
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "text",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "EndsWith"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -101,17 +79,10 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_NotBlank_Success()
     {
-        var condition = new TextFilterCondition
+        var filter = new FilterModel
         {
             FilterType = "text",
-            Type = TextFilterOptions.NotBlank
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "text",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "NotBlank"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -123,18 +94,11 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_Contains_Success()
     {
-        var condition = new TextFilterCondition
+        var filter = new FilterModel
         {
             Filter = "ab",
             FilterType = "text",
-            Type = TextFilterOptions.Contains
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "text",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "Contains"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -147,26 +111,24 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_NotEquals_Success()
     {
-        var condition1 = new TextFilterCondition
+        var condition1 = new TextCondition
         {
             Filter = "abc",
             FilterType = "text",
             Type = TextFilterOptions.NotEquals
         };
-        var condition2 = new TextFilterCondition
+        var condition2 = new TextCondition
         {
             Filter = "ghi",
             FilterType = "text",
             Type = TextFilterOptions.NotEquals
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
             FilterType = "text",
             Operator = Operator.And,
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition> { condition1, condition2 }
+            Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
@@ -179,27 +141,25 @@ public class TextFilterTests
     [Fact]
     public void TextFilter_Composed_Success()
     {
-        var condition1 = new TextFilterCondition
+        var condition1 = new TextCondition
         {
             Filter = "def",
             FilterType = "text",
             Type = TextFilterOptions.NotEquals
         };
 
-        var condition2 = new TextFilterCondition
+        var condition2 = new TextCondition
         {
             Filter = "a",
             FilterType = "text",
             Type = TextFilterOptions.StartsWith
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
             Operator = Operator.And,
             FilterType = "text",
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition>
+            Conditions = new List<FilterConditionBase>
             {
                 condition1, condition2
             }

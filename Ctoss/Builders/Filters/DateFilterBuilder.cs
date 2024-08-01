@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
+public class DateFilterBuilder : IPropertyFilterBuilder<DateCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, DateFilterCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, DateCondition condition)
     {
         return condition.Type switch
         {
@@ -18,7 +18,7 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
         };
     }
 
-    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, DateFilterCondition condition)
+    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, DateCondition condition)
     {
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
@@ -45,7 +45,7 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
         };
     }
 
-    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, DateFilterCondition condition)
+    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, DateCondition condition)
     {
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
@@ -72,7 +72,7 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateFilterCondition>
             Expression.AndAlso(greaterThan, lessThan), parameter);
     }
 
-    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, DateFilterCondition condition)
+    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, DateCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
 
