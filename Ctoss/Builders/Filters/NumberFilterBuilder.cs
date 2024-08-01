@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
+public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, NumberFilterCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, NumberCondition condition)
     {
         return condition.Type switch
         {
@@ -18,7 +18,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         };
     }
 
-    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberFilterCondition condition)
+    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberCondition condition)
     {
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
@@ -49,7 +49,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         };
     }
 
-    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, NumberFilterCondition condition)
+    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, NumberCondition condition)
     {
         if (string.IsNullOrEmpty(condition.Filter))
             throw new ArgumentException("Filter value is required.");
@@ -77,7 +77,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberFilterCondition>
         );
     }
 
-    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, NumberFilterCondition condition)
+    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, NumberCondition condition)
     {
         if (string.IsNullOrEmpty(condition.Filter))
             throw new ArgumentException("Filter value is required.");

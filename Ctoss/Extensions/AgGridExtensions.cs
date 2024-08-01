@@ -6,7 +6,7 @@ public static class AgGridExtensions
 {
     public static AgGridQueryResult<T> Apply<T>(this IEnumerable<T> all, AgGridQuery query)
     {
-        var applyFilter = query.FilterModel is { Count: > 0 };
+        var applyFilter = query.FilterModel!.Filters is { Count: > 0 };
         if (applyFilter)
             all = all.WithFilter(query.FilterModel!);
 
@@ -17,7 +17,7 @@ public static class AgGridExtensions
         var array = all.ToArray();
         var totalCount = array.Length;
         var paginated = array
-            .Skip(query.StartRow - 1)
+            .Skip(query.StartRow)
             .Take(query.EndRow - query.StartRow)
             .ToList();
 
@@ -26,7 +26,7 @@ public static class AgGridExtensions
 
     public static AgGridQueryResult<T> Apply<T>(this IQueryable<T> all, AgGridQuery query)
     {
-        var applyFilter = query.FilterModel is { Count: > 0 };
+        var applyFilter = query.FilterModel!.Filters is { Count: > 0 };
         if (applyFilter)
             all = all.WithFilter(query.FilterModel!);
 
@@ -36,7 +36,7 @@ public static class AgGridExtensions
 
         var totalCount = all.Count();
         var paginated = all
-            .Skip(query.StartRow - 1)
+            .Skip(query.StartRow)
             .Take(query.EndRow - query.StartRow)
             .ToList();
 

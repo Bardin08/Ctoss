@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using Ctoss.Configuration;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class TextFilterBuilder : IPropertyFilterBuilder<TextFilterCondition>
+public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, TextFilterCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, TextCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
         var propertyExpression = IPropertyFilterBuilder<T>

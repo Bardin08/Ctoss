@@ -1,7 +1,6 @@
 ﻿using Ctoss.Builders.Filters;
-using Ctoss.Models;
-using Ctoss.Models.Conditions;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 using Ctoss.Tests.Models;
 
 namespace Ctoss.Tests;
@@ -29,18 +28,11 @@ public class FilterTests
     [Fact]
     public void NumericFilter_Equals_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "10",
             FilterType = "number",
-            Type = NumberFilterOptions.Equals
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "Equals"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -53,20 +45,12 @@ public class FilterTests
     [Fact]
     public void NumericFilter_GreaterThen_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
+            FilterType = "number",
             Filter = "20",
-            FilterType = "number",
-            Type = NumberFilterOptions.GreaterThan
+            Type = "GreaterThan"
         };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
-        };
-
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
@@ -77,18 +61,11 @@ public class FilterTests
     [Fact]
     public void NumericFilter_GreaterThenOrEquals_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "30",
             FilterType = "number",
-            Type = NumberFilterOptions.GreaterThanOrEqual
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "GreaterThanOrEqual"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -101,18 +78,11 @@ public class FilterTests
     [Fact]
     public void NumericFilter_LessThen_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "20",
             FilterType = "number",
-            Type = NumberFilterOptions.LessThan
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "LessThan"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -125,18 +95,11 @@ public class FilterTests
     [Fact]
     public void NumericFilter_LessThenOrEquals_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "10",
             FilterType = "number",
-            Type = NumberFilterOptions.LessThanOrEqual
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "LessThanOrEqual"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -149,19 +112,12 @@ public class FilterTests
     [Fact]
     public void NumericFilter_InRange_Success()
     {
-        var condition = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "0",
             FilterTo = "12",
             FilterType = "number",
-            Type = NumberFilterOptions.InRange
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition,
-            Conditions = new List<FilterCondition> { condition }
+            Type = "InRange"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -174,26 +130,24 @@ public class FilterTests
     [Fact]
     public void NumericFilter_NotEquals_Success()
     {
-        var condition1 = new NumberFilterCondition
+        var condition1 = new NumberCondition
         {
             Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };
-        var condition2 = new NumberFilterCondition
+        var condition2 = new NumberCondition
         {
             Filter = "20",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
             FilterType = "number",
             Operator = Operator.And,
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition> { condition1, condition2 }
+            Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -206,18 +160,11 @@ public class FilterTests
     [Fact]
     public void NumericFilter_NotBlank_Success()
     {
-        var condition1 = new NumberFilterCondition
+        var filter = new FilterModel
         {
             Filter = "10",
             FilterType = "number",
-            Type = NumberFilterOptions.NotBlank
-        };
-
-        var filter = new Filter
-        {
-            FilterType = "number",
-            Condition1 = condition1,
-            Conditions = new List<FilterCondition> { condition1 }
+            Type = "NotBlank"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
@@ -229,50 +176,40 @@ public class FilterTests
     [Fact]
     public void NumericFilter_Blank_Success()
     {
-        var condition1 = new NumberFilterCondition
-        {
-            Filter = "10",
-            FilterType = "number",
-            Type = NumberFilterOptions.Blank
-        };
-
-        var filter = new Filter
+        var filter = new FilterModel
         {
             FilterType = "number",
-            Condition1 = condition1,
-            Conditions = new List<FilterCondition> { condition1 }
+            Type = "Blank"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
-        Assert.Equal(0, result.Count);
+        Assert.Empty(result);
     }
 
     [Fact]
     public void NumericFilter_Composed_Success()
     {
-        var condition1 = new NumberFilterCondition
+        var condition1 = new NumberCondition
         {
             Filter = "25",
             FilterType = "number",
             Type = NumberFilterOptions.LessThan
         };
 
-        var condition2 = new NumberFilterCondition
+        var condition2 = new NumberCondition
         {
             Filter = "10",
             FilterType = "number",
             Type = NumberFilterOptions.NotEquals
         };
 
-        var filter = new Filter
+        var filter = new FilterModel
         {
             Operator = Operator.And,
             FilterType = "number",
-            Condition1 = condition1,
-            Condition2 = condition2,
-            Conditions = new List<FilterCondition>
+            Conditions = new List<FilterConditionBase>
             {
                 condition1, condition2
             }

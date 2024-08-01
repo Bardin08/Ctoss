@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Ctoss.Models.Enums;
+using Ctoss.Models.V2;
 
 namespace Ctoss.Json;
 
@@ -9,7 +11,8 @@ public static class CtossJsonDefaults
     {
         Converters =
         {
-            new FilterConditionConverter(),
+            new FilterConverter(),
+            new NumberToStringConverter(),
             new JsonStringEnumConverter<Operator>(),
             new JsonStringEnumConverter<TextFilterOptions>(),
             new JsonStringEnumConverter<DateFilterOptions>(),
@@ -17,5 +20,6 @@ public static class CtossJsonDefaults
             new JsonStringEnumConverter<SortingOrder>()
         },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.WriteAsString
     };
 }
