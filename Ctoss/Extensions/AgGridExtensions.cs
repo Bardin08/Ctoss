@@ -6,7 +6,7 @@ public static class AgGridExtensions
 {
     public static AgGridQueryResult<T> Apply<T>(this IEnumerable<T> all, AgGridQuery query)
     {
-        var applyFilter = query.FilterModel!.Filters is { Count: > 0 };
+        var applyFilter = query.FilterModel is { Count: > 0 };
         if (applyFilter)
             all = all.WithFilter(query.FilterModel!);
 
@@ -26,7 +26,7 @@ public static class AgGridExtensions
 
     public static AgGridQueryResult<T> Apply<T>(this IQueryable<T> all, AgGridQuery query)
     {
-        var applyFilter = query.FilterModel!.Filters is { Count: > 0 };
+        var applyFilter = query.FilterModel! is { Count: > 0 };
         if (applyFilter)
             all = all.WithFilter(query.FilterModel!);
 

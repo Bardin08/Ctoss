@@ -13,23 +13,20 @@ public class FilterBuilder
     private readonly IPropertyFilterBuilder<NumberCondition> _numberFilterBuilder = new NumberFilterBuilder();
     private readonly IPropertyFilterBuilder<SetCondition> _setFilterBuilder = new SetFilterBuilder();
 
-    public Expression<Func<T, bool>>? GetExpression<T>(AgGridFilter? filterSet)
+    public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, FilterModel>? filterSet)
     {
         if (filterSet == null)
             return null;
 
         var expressions = new List<Expression<Func<T, bool>>>();
 
-        expressions.AddRange(filterSet.Filters
+        expressions.AddRange(filterSet
             .Select(filter => GetExpressionInternal<T>(filter.Key, filter.Value)));
         return expressions.Aggregate((acc, expr) => acc.AndAlso(expr));
     }
 
     public Expression<Func<T, bool>>? GetExpression<T>(string property, FilterModel filter)
-        => GetExpression<T>(new AgGridFilter
-        {
-            Filters = new Dictionary<string, FilterModel> { { property, filter } }
-        });
+        => GetExpression<T>(new Dictionary<string, FilterModel> { { property, filter } });
 
     private Expression<Func<T, bool>> GetExpressionInternal<T>(string property, FilterModel? filter)
     {

@@ -71,7 +71,7 @@ public static class QueryableExtensions
     public static IQueryable<T> WithFilter<T>(
         this IQueryable<T> query, string jsonFilter) =>
         query.WithFilter(
-            JsonSerializer.Deserialize<AgGridFilter>(
+            JsonSerializer.Deserialize<Dictionary<string, FilterModel>?>(
                 jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
         );
 
@@ -79,17 +79,12 @@ public static class QueryableExtensions
         this IQueryable<T> query, string propertyName, FilterModel? filter) =>
         filter is null
             ? query
-            : WithFilter(
-                query,
-                new AgGridFilter
-                {
-                    Filters = new Dictionary<string, FilterModel> { { propertyName, filter } }
-                });
+            : WithFilter(query, new Dictionary<string, FilterModel> { { propertyName, filter } });
 
     public static IQueryable<T> WithFilter<T>(
-        this IQueryable<T> query, AgGridFilter? filtersSet)
+        this IQueryable<T> query, Dictionary<string, FilterModel>? filtersSet)
     {
-        if (filtersSet is null || !filtersSet.Filters.Any())
+        if (filtersSet is null || !filtersSet.Any())
             return query;
 
         var filterBuilder = new FilterBuilder();

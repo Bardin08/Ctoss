@@ -71,7 +71,7 @@ public static class EnumerableExtensions
     public static IEnumerable<T> WithFilter<T>(
         this IEnumerable<T> query, string jsonFilter) =>
         query.WithFilter(
-            JsonSerializer.Deserialize<AgGridFilter>(
+            JsonSerializer.Deserialize<Dictionary<string, FilterModel>?>(
                 jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
         );
 
@@ -79,17 +79,12 @@ public static class EnumerableExtensions
         this IEnumerable<T> query, string propertyName, FilterModel? filter) =>
         filter is null
             ? query
-            : WithFilter(
-                query,
-                new AgGridFilter
-                {
-                    Filters = new Dictionary<string, FilterModel> { { propertyName, filter } }
-                });
+            : WithFilter(query, new Dictionary<string, FilterModel> { { propertyName, filter } });
 
     public static IEnumerable<T> WithFilter<T>(
-        this IEnumerable<T> query, AgGridFilter? filterSet)
+        this IEnumerable<T> query, Dictionary<string, FilterModel>? filterSet)
     {
-        if (filterSet is null || !filterSet.Filters.Any())
+        if (filterSet is null || !filterSet.Any())
             return query;
 
         var filterBuilder = new FilterBuilder();
