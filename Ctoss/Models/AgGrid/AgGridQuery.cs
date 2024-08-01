@@ -6,5 +6,5 @@ public record AgGridQuery(
     int StartRow,
     int EndRow,
     List<Sorting>? SortModel,
-    AgGridFilter? FilterModel
+    Dictionary<string, FilterModel>? FilterModel
 );
