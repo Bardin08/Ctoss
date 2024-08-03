@@ -7,7 +7,7 @@ namespace Ctoss.Builders;
 
 internal interface IPropertyBuilder
 {
-    static UnaryExpression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
+    static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
     {
         // NOTE: first of all, we're trying to get a real property name from the given one.
         // If we find it, we can use it to work with an expression. Else the given property name will be used.
@@ -25,7 +25,7 @@ internal interface IPropertyBuilder
         return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType);
     }
     
-    static UnaryExpression GetPropertyExpression<T>(
+    static Expression GetPropertyExpression<T>(
         string property,
         ParameterExpression parameter,
         Type propertyType)

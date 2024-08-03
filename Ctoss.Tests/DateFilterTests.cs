@@ -40,7 +40,7 @@ public class DateFilterTests
         {
             FilterType = "date",
             DateFrom = "02/02/2023",
-            Type = "GreaterThen"
+            Type = "GreaterThan"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -72,7 +72,7 @@ public class DateFilterTests
         {
             FilterType = "date",
             DateFrom = "01/01/2023",
-            Type = "LessThen"
+            Type = "LessThan"
         };
 
         var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
@@ -158,7 +158,7 @@ public class DateFilterTests
         {
             DateFrom = "03/03/2024",
             FilterType = "date",
-            Type = DateFilterOptions.LessThen
+            Type = DateFilterOptions.LessThan
         };
 
         var filter = new FilterModel
