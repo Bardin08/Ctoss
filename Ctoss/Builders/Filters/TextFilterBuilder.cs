@@ -12,10 +12,11 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
         var parameter = Expression.Parameter(typeof(T), "x");
         var propertyExpression = IPropertyFilterBuilder<T>
             .GetPropertyExpression<T>(property, parameter, typeof(string));
+        propertyExpression = Expression.Coalesce(propertyExpression, Expression.Constant(string.Empty));
         var valueExpression = Expression.Constant(condition.Filter);
 
+        
         ApplyPropertySettings<T>(property, ref propertyExpression, ref valueExpression);
-
         return condition.Type switch
         {
             TextFilterOptions.Contains
@@ -50,7 +51,7 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
 
     private static void ApplyPropertySettings<T>(
         string property,
-        ref UnaryExpression propertyExpression,
+        ref Expression propertyExpression,
         ref ConstantExpression valueExpression)
     {
         var propertySettings = CtossSettings.GetPropertySettings<T>(property);
@@ -59,7 +60,7 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
             return;
         }
 
-        var memberExpression = (MemberExpression)propertyExpression.Operand;
+        var memberExpression = propertyExpression is UnaryExpression unary ? unary.Operand : propertyExpression;
 
         var propertyToUpper = Expression.Call(memberExpression, nameof(string.ToUpper), Type.EmptyTypes);
         propertyExpression = Expression.Convert(propertyToUpper, typeof(string));

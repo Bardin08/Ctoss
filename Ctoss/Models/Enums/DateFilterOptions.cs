@@ -31,14 +31,14 @@ public enum DateFilterOptions
     /// Option Key: lessThan
     /// Included by Default: Yes
     /// </summary>
-    LessThen = 3,
+    LessThan = 3,
 
     /// <summary>
     /// Filters for dates that are greater than the specified date.
     /// Option Key: greaterThan
     /// Included by Default: Yes
     /// </summary>
-    GreaterThen = 4,
+    GreaterThan = 4,
 
     /// <summary>
     /// Filters for dates that are within a specified range.

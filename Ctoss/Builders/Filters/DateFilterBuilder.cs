@@ -93,10 +93,10 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateCondition>
             DateFilterOptions.NotEquals
                 => Expression.Lambda<Func<T, bool>>(
                     Expression.NotEqual(propertyExpression, dateFromExpression), parameter),
-            DateFilterOptions.LessThen
+            DateFilterOptions.LessThan
                 => Expression.Lambda<Func<T, bool>>(
                     Expression.LessThan(propertyExpression, dateFromExpression), parameter),
-            DateFilterOptions.GreaterThen
+            DateFilterOptions.GreaterThan
                 => Expression.Lambda<Func<T, bool>>(
                     Expression.GreaterThan(propertyExpression, dateFromExpression), parameter),
             _ => throw new NotSupportedException($"Date filter type '{condition.Type}' is not supported.")
@@ -110,7 +110,7 @@ public class DateFilterBuilder : IPropertyFilterBuilder<DateCondition>
         if (propertyType == typeof(DateTime) || propertyType == typeof(DateTime?))
             return DateTime.Parse(filterValue);
         if (propertyType == typeof(DateOnly) || propertyType == typeof(DateOnly?))
-            return DateOnly.Parse(filterValue);
+            return DateOnly.FromDateTime(DateTime.Parse(filterValue));
         if (propertyType == typeof(TimeOnly) || propertyType == typeof(TimeOnly?))
             return TimeOnly.Parse(filterValue);
         if (propertyType == typeof(TimeSpan) || propertyType == typeof(TimeSpan?))
