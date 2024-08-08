@@ -1,11 +1,12 @@
 ﻿using System.Linq.Expressions;
+using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Configuration;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
+public class TextFilterBuilder : ITextFilterBuilder
 {
     public Expression<Func<T, bool>> GetExpression<T>(string property, TextCondition condition)
     {

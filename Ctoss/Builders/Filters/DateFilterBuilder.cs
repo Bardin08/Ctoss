@@ -1,10 +1,11 @@
 ﻿using System.Linq.Expressions;
+using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class DateFilterBuilder : IPropertyFilterBuilder<DateCondition>
+public class DateFilterBuilder : IDateFilterBuilder
 {
     public Expression<Func<T, bool>> GetExpression<T>(string property, DateCondition condition)
     {

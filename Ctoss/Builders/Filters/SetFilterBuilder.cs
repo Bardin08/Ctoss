@@ -1,16 +1,16 @@
 using System.Linq.Expressions;
 using System.Reflection;
+using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-internal class SetFilterBuilder : IPropertyFilterBuilder<SetCondition>
+internal class SetFilterBuilder : ISetFilterBuilder
 {
     public Expression<Func<T, bool>> GetExpression<T>(string property, SetCondition condition)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
         
-        // Build: x => x.Property.Contains(condition.Filter)
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
         var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
         

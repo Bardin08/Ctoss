@@ -5,7 +5,7 @@ using Ctoss.Expressions;
 
 namespace Ctoss.Builders;
 
-internal interface IPropertyBuilder
+public interface IPropertyBuilder
 {
     static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
     {

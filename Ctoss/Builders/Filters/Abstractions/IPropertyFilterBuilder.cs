@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss.Builders.Filters;
+namespace Ctoss.Builders.Filters.Abstractions;
 
-internal interface IPropertyFilterBuilder<in TCondition> : IPropertyBuilder
+public interface IPropertyFilterBuilder<in TCondition> : IPropertyBuilder
 {
     Expression<Func<T, bool>> GetExpression<T>(string property, TCondition condition);
 }

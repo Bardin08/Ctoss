@@ -2,7 +2,7 @@
 
 namespace Ctoss.Builders.Sorting;
 
-public class SortingBuilder
+public class SortingBuilder : ISortingBuilder
 {
     public Expression<Func<T, object>>? BuildSortingExpressionV2<T>(Models.Sorting? sorting)
         => sorting == null ? null : GetPropertyExpressionInternal<T>(sorting.Property);

@@ -1,17 +1,18 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Extensions;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
 namespace Ctoss.Builders.Filters;
 
-public class FilterBuilder
+public class FilterBuilder : IFilterBuilder
 {
-    private readonly IPropertyFilterBuilder<TextCondition> _textFilterBuilder = new TextFilterBuilder();
-    private readonly IPropertyFilterBuilder<DateCondition> _dateFilterBuilder = new DateFilterBuilder();
-    private readonly IPropertyFilterBuilder<NumberCondition> _numberFilterBuilder = new NumberFilterBuilder();
-    private readonly IPropertyFilterBuilder<SetCondition> _setFilterBuilder = new SetFilterBuilder();
+    private readonly ITextFilterBuilder _textFilterBuilder = new TextFilterBuilder();
+    private readonly IDateFilterBuilder _dateFilterBuilder = new DateFilterBuilder();
+    private readonly INumberFilterBuilder _numberFilterBuilder = new NumberFilterBuilder();
+    private readonly ISetFilterBuilder _setFilterBuilder = new SetFilterBuilder();
 
     public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, FilterModel>? filterSet)
     {
