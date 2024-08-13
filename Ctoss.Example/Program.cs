@@ -1,8 +1,11 @@
-﻿using Ctoss.Configuration.Builders;
+﻿using System.Text.Json;
+using Ctoss;
+using Ctoss.Configuration.Builders;
+using Ctoss.DependencyInjection;
 using Ctoss.Example;
-using Ctoss.Extensions;
-using Ctoss.Models;
-using Ctoss.Models.Enums;
+using Ctoss.Json;
+using Ctoss.Models.AgGrid;
+using Microsoft.Extensions.DependencyInjection;
 
 CtossSettingsBuilder.Create()
     .Entity<ExampleEntity>()
@@ -17,29 +20,45 @@ CtossSettingsBuilder.Create()
     .Property(x => x.TextField, settings => { settings.IgnoreCase = true; })
     .Apply();
 
-var entities = ExampleEntityFaker.GetN(100).AsQueryable()
-    .WithFilter(JsonExamples.PlainDateRangeFilter)
-    .ToList();
+var serviceCollection = new ServiceCollection();
+serviceCollection.AddCtoss();
+
+var sp = serviceCollection.BuildServiceProvider();
+var ctossService = sp.GetRequiredService<ICtossService>();
+
+var result = await ctossService.ApplyAsync(
+    GetQueryFromJson(
+        JsonExamples.PlainDateRangeFilter),
+    ExampleEntityFaker.GetN(100));
 
 Console.WriteLine("Filtered entities:");
-foreach (var entity in entities) Console.WriteLine(entity.Property);
+foreach (var entity in result.Rows) Console.WriteLine(entity.Property);
 
-Console.WriteLine("\nNumeric entities:");
+return;
 
-var sortings = new List<Sorting>
+AgGridQuery GetQueryFromJson(string json)
 {
-    new()
-    {
-        Property = "virtual",
-        Order = SortingOrder.Asc
-    },
-};
+    return JsonSerializer.Deserialize<AgGridQuery>(json, CtossJsonDefaults.DefaultJsonOptions)!;
+}
 
-var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
-    .WithFilter(JsonExamples.MultipleConditionsNumberFilter)
-    .WithSorting(sortings)
-    .WithPagination(1, 10)
-    .ToList();
 
-foreach (var entity in numericEntities)
-    Console.WriteLine($"A: {entity.A}, B: {entity.B}, SubEntity = ({entity.SubEntity.A + entity.SubEntity.B})");
+//
+// Console.WriteLine("\nNumeric entities:");
+//
+// var sortings = new List<Sorting>
+// {
+//     new()
+//     {
+//         Property = "virtual",
+//         Order = SortingOrder.Asc
+//     },
+// };
+//
+// var numericEntities = ExampleNumericEntityFaker.GetN(100).AsQueryable()
+//     .WithFilter(JsonExamples.MultipleConditionsNumberFilter)
+//     .WithSorting(sortings)
+//     .WithPagination(1, 10)
+//     .ToList();
+//
+// foreach (var entity in numericEntities)
+//     Console.WriteLine($"A: {entity.A}, B: {entity.B}, SubEntity = ({entity.SubEntity.A + entity.SubEntity.B})");

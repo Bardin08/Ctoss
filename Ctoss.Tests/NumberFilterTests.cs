@@ -7,7 +7,11 @@ namespace Ctoss.Tests;
 
 public class FilterTests
 {
-    private readonly FilterBuilder _filterBuilder = new();
+    private readonly FilterBuilder _filterBuilder = new(
+        new TextFilterBuilder(),
+        new DateFilterBuilder(),
+        new NumberFilterBuilder(),
+        new SetFilterBuilder());
 
     private readonly List<TestEntity> _testEntities =
     [

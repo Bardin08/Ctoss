@@ -9,12 +9,12 @@ public static class JsonExamples
     public const string PlainDateRangeFilter =
         """
         {
-           "filters":{
-              "PrOpErTy":{
-                 "filterType":"date",
-                 "type":"inRange",
-                 "dateFrom":"10/10/2002",
-                 "dateTo":"10/12/2020"
+           "filterModel": {
+              "PrOpErTy": {
+                 "filterType": "date",
+                 "type": "inRange",
+                 "dateFrom": "10/10/2002",
+                 "dateTo": "10/12/2020"
               }
            }
         }

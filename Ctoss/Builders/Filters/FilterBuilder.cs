@@ -2,6 +2,7 @@
 using System.Reflection;
 using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Extensions;
+using Ctoss.Models;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
@@ -9,10 +10,29 @@ namespace Ctoss.Builders.Filters;
 
 public class FilterBuilder : IFilterBuilder
 {
-    private readonly ITextFilterBuilder _textFilterBuilder = new TextFilterBuilder();
-    private readonly IDateFilterBuilder _dateFilterBuilder = new DateFilterBuilder();
-    private readonly INumberFilterBuilder _numberFilterBuilder = new NumberFilterBuilder();
-    private readonly ISetFilterBuilder _setFilterBuilder = new SetFilterBuilder();
+    private readonly ITextFilterBuilder _textFilterBuilder;
+    private readonly IDateFilterBuilder _dateFilterBuilder;
+    private readonly INumberFilterBuilder _numberFilterBuilder;
+    private readonly ISetFilterBuilder _setFilterBuilder;
+
+    public FilterBuilder(
+        ITextFilterBuilder textFilterBuilder,
+        IDateFilterBuilder dateFilterBuilder,
+        INumberFilterBuilder numberFilterBuilder,
+        ISetFilterBuilder setFilterBuilder)
+    {
+        _textFilterBuilder = textFilterBuilder;
+        _dateFilterBuilder = dateFilterBuilder;
+        _numberFilterBuilder = numberFilterBuilder;
+        _setFilterBuilder = setFilterBuilder;
+    }
+
+    public Expression<Func<T, bool>>? GetExpression<T>(FilterDescriptor? descriptor)
+    {
+        return descriptor != null
+            ? GetExpressionInternal<T>(descriptor.PropertyName, descriptor.Filter)
+            : null;
+    }
 
     public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, FilterModel>? filterSet)
     {

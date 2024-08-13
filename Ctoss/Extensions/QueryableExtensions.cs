@@ -67,34 +67,34 @@ public static class QueryableExtensions
     #endregion
 
     #region Filtering
-
-    public static IQueryable<T> WithFilter<T>(
-        this IQueryable<T> query, string jsonFilter) =>
-        query.WithFilter(
-            JsonSerializer.Deserialize<Dictionary<string, FilterModel>?>(
-                jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
-        );
-
-    public static IQueryable<T> WithFilter<T>(
-        this IQueryable<T> query, string propertyName, FilterModel? filter) =>
-        filter is null
-            ? query
-            : WithFilter(query, new Dictionary<string, FilterModel> { { propertyName, filter } });
-
-    public static IQueryable<T> WithFilter<T>(
-        this IQueryable<T> query, Dictionary<string, FilterModel>? filtersSet)
-    {
-        if (filtersSet is null || !filtersSet.Any())
-            return query;
-
-        var filterBuilder = new FilterBuilder();
-        var predicate = filterBuilder.GetExpression<T>(filtersSet);
-
-        if (predicate is null)
-            throw new ArgumentException("Invalid filter");
-
-        return query.Where(predicate);
-    }
+    //
+    // public static IQueryable<T> WithFilter<T>(
+    //     this IQueryable<T> query, string jsonFilter) =>
+    //     query.WithFilter(
+    //         JsonSerializer.Deserialize<Dictionary<string, FilterModel>?>(
+    //             jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
+    //     );
+    //
+    // public static IQueryable<T> WithFilter<T>(
+    //     this IQueryable<T> query, string propertyName, FilterModel? filter) =>
+    //     filter is null
+    //         ? query
+    //         : WithFilter(query, new Dictionary<string, FilterModel> { { propertyName, filter } });
+    //
+    // public static IQueryable<T> WithFilter<T>(
+    //     this IQueryable<T> query, Dictionary<string, FilterModel>? filtersSet)
+    // {
+    //     if (filtersSet is null || !filtersSet.Any())
+    //         return query;
+    //
+    //     var filterBuilder = new FilterBuilder();
+    //     var predicate = filterBuilder.GetExpression<T>(filtersSet);
+    //
+    //     if (predicate is null)
+    //         throw new ArgumentException("Invalid filter");
+    //
+    //     return query.Where(predicate);
+    // }
 
     #endregion
 }
