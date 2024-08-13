@@ -3,7 +3,7 @@ using System.Reflection;
 using Ctoss.Configuration;
 using Ctoss.Expressions;
 
-namespace Ctoss.Builders;
+namespace Ctoss.Core.Builders;
 
 public interface IPropertyBuilder
 {

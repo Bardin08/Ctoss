@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
-using Ctoss.Builders.Filters;
+using Ctoss.Core.Builders.Filters.Abstractions;
 using Ctoss.Extensions;
 using Ctoss.Models;
 
-namespace Ctoss;
+namespace Ctoss.Core;
 
 public class FilterProvider : IFilterProvider
 {

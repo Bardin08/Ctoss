@@ -1,10 +1,10 @@
 ﻿using System.Linq.Expressions;
-using Ctoss.Builders.Filters.Abstractions;
 using Ctoss.Configuration;
+using Ctoss.Core.Builders.Filters.Abstractions;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
-namespace Ctoss.Builders.Filters;
+namespace Ctoss.Core.Builders.Filters;
 
 public class TextFilterBuilder : ITextFilterBuilder
 {

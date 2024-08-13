@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Ctoss.Models;
 
-namespace Ctoss;
+namespace Ctoss.Core;
 
 public class FilterExpressionCache : IFilterExpressionCache
 {

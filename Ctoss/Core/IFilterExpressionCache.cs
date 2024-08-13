@@ -1,6 +1,6 @@
 using Ctoss.Models;
 
-namespace Ctoss;
+namespace Ctoss.Core;
 
 public interface IFilterExpressionCache : ICache<FilterDescriptor, object>
 {

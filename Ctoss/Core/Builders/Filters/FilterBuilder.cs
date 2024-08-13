@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
-using Ctoss.Builders.Filters.Abstractions;
+using Ctoss.Core.Builders.Filters.Abstractions;
 using Ctoss.Extensions;
 using Ctoss.Models;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 
-namespace Ctoss.Builders.Filters;
+namespace Ctoss.Core.Builders.Filters;
 
 public class FilterBuilder : IFilterBuilder
 {

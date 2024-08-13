@@ -1,4 +1,5 @@
-using Ctoss.Builders.Sorting;
+using Ctoss.Core;
+using Ctoss.Core.Builders.Sorting;
 using Ctoss.Extensions;
 using Ctoss.Models;
 using Ctoss.Models.AgGrid;

@@ -1,7 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Ctoss.Models.V2;
 
-namespace Ctoss.Models.V2;
+namespace Ctoss.Json;
 
 public class FilterConverter : JsonConverter<FilterConditionBase?>
 {

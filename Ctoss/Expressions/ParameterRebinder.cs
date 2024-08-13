@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss;
+namespace Ctoss.Expressions;
 
 /// <summary>
 /// Rebinds parameters in expressions to new parameters.

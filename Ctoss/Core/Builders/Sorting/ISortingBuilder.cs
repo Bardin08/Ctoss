@@ -1,4 +1,4 @@
-﻿namespace Ctoss.Builders.Sorting;
+﻿namespace Ctoss.Core.Builders.Sorting;
 
 public interface ISortingBuilder : IPropertyBuilder
 {

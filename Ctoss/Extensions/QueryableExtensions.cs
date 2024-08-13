@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
-using Ctoss.Builders.Filters;
-using Ctoss.Builders.Sorting;
+using Ctoss.Core.Builders.Sorting;
 using Ctoss.Json;
 using Ctoss.Models;
 using Ctoss.Models.Enums;

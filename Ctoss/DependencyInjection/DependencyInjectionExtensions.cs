@@ -1,6 +1,7 @@
-using Ctoss.Builders.Filters;
-using Ctoss.Builders.Filters.Abstractions;
-using Ctoss.Builders.Sorting;
+using Ctoss.Core;
+using Ctoss.Core.Builders.Filters;
+using Ctoss.Core.Builders.Filters.Abstractions;
+using Ctoss.Core.Builders.Sorting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Ctoss.DependencyInjection;

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss.Builders.Sorting;
+namespace Ctoss.Core.Builders.Sorting;
 
 public class SortingBuilder : ISortingBuilder
 {

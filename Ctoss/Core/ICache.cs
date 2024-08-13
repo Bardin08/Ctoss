@@ -1,4 +1,4 @@
-namespace Ctoss;
+namespace Ctoss.Core;
 
 public interface ICache<in TKey, TEntry>
 {

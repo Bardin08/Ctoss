@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 using Ctoss.Models;
 using Ctoss.Models.V2;
 
-namespace Ctoss.Builders.Filters;
+namespace Ctoss.Core.Builders.Filters.Abstractions;
 
 public interface IFilterBuilder
 {
