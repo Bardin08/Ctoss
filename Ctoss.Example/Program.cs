@@ -8,9 +8,6 @@ using Ctoss.Models.AgGrid;
 using Microsoft.Extensions.DependencyInjection;
 
 CtossSettingsBuilder.Create()
-    .Entity<ExampleEntity>()
-    .Property("Property", x => x.Property + x.Property2, p => { p.IgnoreCase = true; })
-    .Apply()
     .Entity<ExampleNumericEntity>()
     .Property("virtual", x =>
         (x.SubEntity == null ? -1 : x.SubEntity.A) + (x.SubEntity == null ? -1 : x.SubEntity.B))
@@ -26,7 +23,7 @@ serviceCollection.AddCtoss();
 var sp = serviceCollection.BuildServiceProvider();
 var ctossService = sp.GetRequiredService<ICtossService>();
 
-var result = await ctossService.ApplyAsync(
+var result = ctossService.Apply(
     GetQueryFromJson(
         JsonExamples.PlainDateRangeFilter),
     ExampleEntityFaker.GetN(100));

@@ -1,9 +1,7 @@
 ﻿using System.Text.Json;
 using Ctoss.Core.Builders.Sorting;
-using Ctoss.Json;
 using Ctoss.Models;
 using Ctoss.Models.Enums;
-using Ctoss.Models.V2;
 
 namespace Ctoss.Extensions;
 
@@ -62,38 +60,6 @@ public static class EnumerableExtensions
 
         return orderedQuery ?? query;
     }
-
-    #endregion
-
-    #region Filtering
-
-    // public static IEnumerable<T> WithFilter<T>(
-    //     this IEnumerable<T> query, string jsonFilter) =>
-    //     query.WithFilter(
-    //         JsonSerializer.Deserialize<Dictionary<string, FilterModel>?>(
-    //             jsonFilter, CtossJsonDefaults.DefaultJsonOptions)
-    //     );
-    //
-    // public static IEnumerable<T> WithFilter<T>(
-    //     this IEnumerable<T> query, string propertyName, FilterModel? filter) =>
-    //     filter is null
-    //         ? query
-    //         : WithFilter(query, new Dictionary<string, FilterModel> { { propertyName, filter } });
-    //
-    // public static IEnumerable<T> WithFilter<T>(
-    //     this IEnumerable<T> query, Dictionary<string, FilterModel>? filterSet)
-    // {
-    //     if (filterSet is null || !filterSet.Any())
-    //         return query;
-    //
-    //     var filterBuilder = new FilterBuilder();
-    //     var predicate = filterBuilder.GetExpression<T>(filterSet);
-    //
-    //     if (predicate is null)
-    //         throw new ArgumentException("Invalid filter");
-    //
-    //     return query.Where(predicate.Compile());
-    // }
 
     #endregion
 }

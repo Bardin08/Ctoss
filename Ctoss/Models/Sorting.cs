@@ -3,7 +3,7 @@ using Ctoss.Models.Enums;
 
 namespace Ctoss.Models;
 
-public class Sorting
+public record Sorting
 {
     [JsonPropertyName("colId")]
     public string Property { get; set; } = null!;

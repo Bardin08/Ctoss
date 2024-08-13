@@ -16,7 +16,15 @@ public static class JsonExamples
                  "dateFrom": "10/10/2002",
                  "dateTo": "10/12/2020"
               }
-           }
+           },
+           "sortModel": [
+              {
+                 "colId": "PrOpErTy",
+                 "sort": "asc"
+              }
+           ],
+           "startRow": 5,
+           "endRow": 10
         }
         """;
 

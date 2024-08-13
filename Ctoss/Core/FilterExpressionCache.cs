@@ -7,15 +7,14 @@ public class FilterExpressionCache : IFilterExpressionCache
 {
     private readonly ConcurrentDictionary<FilterDescriptor, object> _cache = new();
 
-    public Task<object>? Get(FilterDescriptor key)
+    public object? Get(FilterDescriptor key)
     {
         _ = _cache.TryGetValue(key, out var entry);
-        return Task.FromResult(entry)!;
+        return entry;
     }
 
-    public Task Set(FilterDescriptor key, object entry)
+    public void Set(FilterDescriptor key, object entry)
     {
         _cache.AddOrUpdate(key, _ => entry, (_, _) => entry);
-        return Task.CompletedTask;
     }
 }

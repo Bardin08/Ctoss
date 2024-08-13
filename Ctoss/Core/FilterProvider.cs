@@ -16,27 +16,19 @@ public class FilterProvider : IFilterProvider
         _expressionCache = expressionCache;
     }
 
-    public async Task<Expression<Func<TModel, bool>>?> GetFilterExpressionAsync<TModel>(
+    public Expression<Func<TModel, bool>>? GetFilterExpression<TModel>(
         IEnumerable<FilterDescriptor>? filterSet)
     {
-        if (filterSet is null)
-        {
-            return null;
-        }
-
-        var filterExpressionsTasks = filterSet.Select(GetExpressionAsync<TModel>);
-        var expressions = await Task.WhenAll(filterExpressionsTasks);
-
-        var aggregatedExpression = expressions
+        var aggregatedExpression = filterSet?.Select(GetExpression<TModel>)
             .OfType<Expression<Func<TModel, bool>>>()
             .Aggregate((acc, expr) => acc.AndAlso(expr));
 
         return aggregatedExpression;
     }
 
-    private async Task<Expression<Func<TModel, bool>>?> GetExpressionAsync<TModel>(FilterDescriptor filter)
+    private Expression<Func<TModel, bool>>? GetExpression<TModel>(FilterDescriptor filter)
     {
-        var cachedExpression = (Expression<Func<TModel, bool>>?)await _expressionCache.Get(filter)!;
+        var cachedExpression = (Expression<Func<TModel, bool>>?)_expressionCache.Get(filter);
 
         var cacheExists = cachedExpression is not null;
         if (cacheExists)
@@ -45,7 +37,7 @@ public class FilterProvider : IFilterProvider
         }
 
         var generatedExpression = _filterBuilder.GetExpression<TModel>(filter);
-        await _expressionCache.Set(filter, generatedExpression!);
+        _expressionCache.Set(filter, generatedExpression!);
 
         return generatedExpression;
     }

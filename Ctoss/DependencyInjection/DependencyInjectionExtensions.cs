@@ -20,6 +20,9 @@ public static class DependencyInjectionExtensions
         
         services.AddSingleton<IFilterProvider, FilterProvider>();
         services.AddSingleton<IFilterExpressionCache, FilterExpressionCache>();
+                
+        services.AddSingleton<ISortingProvider, SortingProvider>();
+        services.AddSingleton<ISortingExpressionCache, SortingExpressionCache>();
         
         services.AddSingleton<ICtossService, CtossService>();
     }

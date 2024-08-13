@@ -5,6 +5,6 @@ namespace Ctoss.Core;
 
 public interface IFilterProvider
 {
-    Task<Expression<Func<TModel, bool>>?> GetFilterExpressionAsync<TModel>(
+    Expression<Func<TModel, bool>>? GetFilterExpression<TModel>(
         IEnumerable<FilterDescriptor>? filterModel);
 }
