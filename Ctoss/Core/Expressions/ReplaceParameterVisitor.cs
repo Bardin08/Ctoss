@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Ctoss.Expressions;
+namespace Ctoss.Core.Expressions;
 
 
 internal class ReplaceParameterVisitor : ExpressionVisitor

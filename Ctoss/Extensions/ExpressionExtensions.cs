@@ -1,5 +1,5 @@
 ﻿using System.Linq.Expressions;
-using Ctoss.Expressions;
+using Ctoss.Core.Expressions;
 
 namespace Ctoss.Extensions;
 

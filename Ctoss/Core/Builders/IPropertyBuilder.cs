@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using Ctoss.Configuration;
-using Ctoss.Expressions;
+using Ctoss.Core.Expressions;
 
 namespace Ctoss.Core.Builders;
 
