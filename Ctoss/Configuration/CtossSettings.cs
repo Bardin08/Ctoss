@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Ctoss.Configuration;
 
@@ -21,6 +22,14 @@ public static class CtossSettings
         return hasPropertyConfiguration
             ? typeSettings.PropertyMappings.Properties[propertyName]
             : null;
+    }
+
+    internal static Type? GetPropertyType(Type type, string propertyName)
+    {
+        return (Type?)typeof(CtossSettings).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)!
+            .Single(x => x is { IsGenericMethod: true, Name: nameof(GetPropertyType) })
+            .MakeGenericMethod(type)
+            .Invoke(null, new object[] { propertyName });
     }
 
     internal static Type? GetPropertyType<TEntity>(string propertyName)
