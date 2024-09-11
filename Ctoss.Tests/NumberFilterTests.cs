@@ -24,6 +24,23 @@ public class FilterTests
             NumericProperty = 30, StringProperty = "ghi", DateTimeProperty = new DateOnly(2024, 3, 3)
         }
     ];
+    
+    [Fact]
+    public void NumericFilter_NestedProperty_Equals_Success()
+    {
+        var filter = new FilterModel
+        {
+            Filter = "2024",
+            FilterType = "number",
+            Type = "Equals"
+        };
+
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty.year", filter)!;
+        var result = _testEntities.AsQueryable().Where(expr).ToList();
+
+        Assert.Single(result);
+        Assert.Same(result.Single(), result.Single(x => x.DateTimeProperty.Year == 2024));
+    }
 
     [Fact]
     public void NumericFilter_Equals_Success()
