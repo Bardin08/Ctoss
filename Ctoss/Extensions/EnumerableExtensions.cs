@@ -50,14 +50,14 @@ public static class EnumerableExtensions
             if (i == 0)
             {
                 orderedQuery = sorting.Order == SortingOrder.Asc
-                    ? Queryable.OrderBy(query, (dynamic)sortingExpression)
-                    : Queryable.OrderByDescending(query, (dynamic)sortingExpression);
+                    ? query.AsQueryable().OrderBy(sortingExpression)
+                    : query.AsQueryable().OrderByDescending(sortingExpression);
             }
             else
             {
                 orderedQuery = sorting.Order == SortingOrder.Asc
-                    ? Queryable.ThenBy(orderedQuery, (dynamic)sortingExpression)
-                    : Queryable.ThenByDescending(orderedQuery, (dynamic)sortingExpression);
+                    ? orderedQuery.ThenBy(sortingExpression)
+                    : orderedQuery.ThenByDescending(sortingExpression);
             }
         }
 
