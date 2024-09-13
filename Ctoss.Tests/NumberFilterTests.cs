@@ -35,7 +35,7 @@ public class FilterTests
             Type = "Equals"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty.year", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty.year", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -52,7 +52,7 @@ public class FilterTests
             Type = "Equals"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -68,7 +68,7 @@ public class FilterTests
             Filter = "20",
             Type = "GreaterThan"
         };
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -85,7 +85,7 @@ public class FilterTests
             Type = "GreaterThanOrEqual"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -102,7 +102,7 @@ public class FilterTests
             Type = "LessThan"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -119,7 +119,7 @@ public class FilterTests
             Type = "LessThanOrEqual"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -137,7 +137,7 @@ public class FilterTests
             Type = "InRange"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -167,7 +167,7 @@ public class FilterTests
             Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -184,7 +184,7 @@ public class FilterTests
             Type = "NotBlank"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Equal(3, result.Count);
@@ -199,7 +199,7 @@ public class FilterTests
             Type = "Blank"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Empty(result);
@@ -232,7 +232,7 @@ public class FilterTests
             }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("NumericProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);

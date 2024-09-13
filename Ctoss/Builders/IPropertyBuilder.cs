@@ -9,7 +9,7 @@ internal interface IPropertyBuilder
 {
     private static readonly BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
     
-    static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
+    static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter, bool conditionalAccess)
     {
         // NOTE: first of all, we're trying to get a real property name from the given one.
         // If we find it, we can use it to work with an expression. Else the given property name will be used.
@@ -23,13 +23,14 @@ internal interface IPropertyBuilder
             ? typeof(Nullable<>).MakeGenericType(propertyType)
             : propertyType;
         
-        return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType);
+        return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType, conditionalAccess);
     }
     
     static Expression GetPropertyExpression<T>(
         string property,
         ParameterExpression parameter,
-        Type propertyType)
+        Type propertyType,
+        bool conditionalAccess)
     {
         var customMapping = CtossSettings.GetPropertyMapping<T>(property);
         Expression propertyRawExpression;
@@ -37,7 +38,21 @@ internal interface IPropertyBuilder
         if (customMapping == null)
         {
             var parts = property.Split('.');
-            propertyRawExpression = parts.Aggregate((Expression)parameter, Expression.Property);
+            Expression prop = parameter;
+            foreach (var p in parts)
+            {
+                var propExp = Expression.PropertyOrField(prop, p);
+                if (!conditionalAccess)
+                {
+                    prop = propExp;
+                }
+                else
+                {
+                    prop = CanBeNull(propExp.Type) ? Expression.Condition(Expression.Equal(prop, Expression.Constant(null)), Expression.Default(propExp.Type), propExp) : propExp;
+                }
+            }
+
+            propertyRawExpression = prop;
         }
         else
         {
@@ -72,5 +87,26 @@ internal interface IPropertyBuilder
             var type = GetPropertyType(entityType, parts[0]);
             return GetPropertyType(type, string.Join(".", parts.Skip(1)));
         }
+    }
+    
+    private static bool CanBeNull(Type type)
+    {
+        if (type == null)
+            throw new ArgumentNullException(nameof(type));
+
+        // Check if it's a reference type
+        if (type.IsClass)
+            return true;
+
+        // Check if it's a nullable value type
+        if (type.IsValueType)
+        {
+            // Check if it's a nullable type
+            if (Nullable.GetUnderlyingType(type) != null)
+                return true;
+        }
+
+        // Otherwise, the type cannot be null
+        return false;
     }
 }

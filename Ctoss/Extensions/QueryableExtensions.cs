@@ -43,7 +43,7 @@ public static class QueryableExtensions
         for (var i = 0; i < sortings.Count; i++)
         {
             var sorting = sortings[i];
-            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting);
+            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting, false);
             if (sortingExpression is null)
                 continue;
 
@@ -88,7 +88,7 @@ public static class QueryableExtensions
             return query;
 
         var filterBuilder = new FilterBuilder();
-        var predicate = filterBuilder.GetExpression<T>(filtersSet);
+        var predicate = filterBuilder.GetExpression<T>(filtersSet, false);
 
         if (predicate is null)
             throw new ArgumentException("Invalid filter");

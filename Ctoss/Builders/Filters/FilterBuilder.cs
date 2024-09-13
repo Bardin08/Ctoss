@@ -13,7 +13,7 @@ public class FilterBuilder
     private readonly IPropertyFilterBuilder<NumberCondition> _numberFilterBuilder = new NumberFilterBuilder();
     private readonly IPropertyFilterBuilder<SetCondition> _setFilterBuilder = new SetFilterBuilder();
 
-    public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, FilterModel>? filterSet)
+    public Expression<Func<T, bool>>? GetExpression<T>(Dictionary<string, FilterModel>? filterSet, bool conditionalAccess)
     {
         if (filterSet == null)
             return null;
@@ -21,14 +21,14 @@ public class FilterBuilder
         var expressions = new List<Expression<Func<T, bool>>>();
 
         expressions.AddRange(filterSet
-            .Select(filter => GetExpressionInternal<T>(filter.Key, filter.Value)));
+            .Select(filter => GetExpressionInternal<T>(filter.Key, filter.Value, conditionalAccess)));
         return expressions.Aggregate((acc, expr) => acc.AndAlso(expr));
     }
 
-    public Expression<Func<T, bool>>? GetExpression<T>(string property, FilterModel filter)
-        => GetExpression<T>(new Dictionary<string, FilterModel> { { property, filter } });
+    public Expression<Func<T, bool>>? GetExpression<T>(string property, FilterModel filter, bool conditionalAccess)
+        => GetExpression<T>(new Dictionary<string, FilterModel> { { property, filter } }, conditionalAccess);
 
-    private Expression<Func<T, bool>> GetExpressionInternal<T>(string property, FilterModel? filter)
+    private Expression<Func<T, bool>> GetExpressionInternal<T>(string property, FilterModel? filter, bool conditionalAccess)
     {
         if (filter == null)
             return _ => true;
@@ -36,7 +36,7 @@ public class FilterBuilder
         if (filter.Operator != null && filter.Operator != Operator.NoOp)
         {
             return filter.Conditions?
-                .Select(c => GetFilterExpr<T>(property, c))
+                .Select(c => GetFilterExpr<T>(property, c, conditionalAccess))
                 .Aggregate((acc, expr) => filter.Operator switch
                 {
                     Operator.And => acc.AndAlso(expr),
@@ -45,7 +45,7 @@ public class FilterBuilder
                 })!;
         }
 
-        return GetFilterExpr<T>(property, MapPlainFilterToConditions(filter));
+        return GetFilterExpr<T>(property, MapPlainFilterToConditions(filter), conditionalAccess);
     }
 
     private static FilterConditionBase MapPlainFilterToConditions(FilterModel filter)
@@ -84,7 +84,7 @@ public class FilterBuilder
         };
     }
 
-    private Expression<Func<T, bool>> GetFilterExpr<T>(string property, FilterConditionBase? condition)
+    private Expression<Func<T, bool>> GetFilterExpr<T>(string property, FilterConditionBase? condition, bool conditionalAccess)
     {
         // NOTE: first of all, we're trying to get a real property name from the given one.
         // If we find it, we can use it to work with an expression. Else the given property name will be used.
@@ -95,13 +95,13 @@ public class FilterBuilder
         return condition switch
         {
             TextCondition textCondition
-                => _textFilterBuilder.GetExpression<T>(propertyName, textCondition),
+                => _textFilterBuilder.GetExpression<T>(propertyName, textCondition, conditionalAccess),
             DateCondition dateCondition
-                => _dateFilterBuilder.GetExpression<T>(propertyName, dateCondition),
+                => _dateFilterBuilder.GetExpression<T>(propertyName, dateCondition, conditionalAccess),
             NumberCondition numberCondition
-                => _numberFilterBuilder.GetExpression<T>(propertyName, numberCondition),
+                => _numberFilterBuilder.GetExpression<T>(propertyName, numberCondition, conditionalAccess),
             SetCondition setCondition
-                => _setFilterBuilder.GetExpression<T>(propertyName, setCondition),
+                => _setFilterBuilder.GetExpression<T>(propertyName, setCondition, conditionalAccess),
             _ => _ => true
         };
     }

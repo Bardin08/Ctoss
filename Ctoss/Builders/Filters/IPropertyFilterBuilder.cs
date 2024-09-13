@@ -4,5 +4,5 @@ namespace Ctoss.Builders.Filters;
 
 internal interface IPropertyFilterBuilder<in TCondition> : IPropertyBuilder
 {
-    Expression<Func<T, bool>> GetExpression<T>(string property, TCondition condition);
+    Expression<Func<T, bool>> GetExpression<T>(string property, TCondition condition, bool conditionalAccess);
 }
