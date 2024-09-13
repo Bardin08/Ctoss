@@ -6,19 +6,19 @@ namespace Ctoss.Builders.Filters;
 
 public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, NumberCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, NumberCondition condition, bool conditionalAccess)
     {
         return condition.Type switch
         {
             NumberFilterOptions.Blank or NumberFilterOptions.NotBlank or NumberFilterOptions.Empty
-                => GetBlankExpression<T>(property, condition),
+                => GetBlankExpression<T>(property, condition, conditionalAccess),
             NumberFilterOptions.InRange
-                => GetRangeExpression<T>(property, condition),
-            _ => GetComparisonExpression<T>(property, condition)
+                => GetRangeExpression<T>(property, condition, conditionalAccess),
+            _ => GetComparisonExpression<T>(property, condition, conditionalAccess)
         };
     }
 
-    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberCondition condition)
+    private Expression<Func<T, bool>> GetBlankExpression<T>(string property, NumberCondition condition, bool conditionalAccess)
     {
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
 
@@ -27,7 +27,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
             : propertyType;
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType, conditionalAccess);
 
         return condition.Type switch
         {
@@ -49,7 +49,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
         };
     }
 
-    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, NumberCondition condition)
+    private Expression<Func<T, bool>> GetRangeExpression<T>(string property, NumberCondition condition, bool conditionalAccess)
     {
         if (string.IsNullOrEmpty(condition.Filter))
             throw new ArgumentException("Filter value is required.");
@@ -66,7 +66,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
         var toExpression = Expression.Constant(to, propertyType);
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType, conditionalAccess);
 
         var greaterThan = Expression.GreaterThan(propertyExpression, fromExpression);
         var lessThan = Expression.LessThan(propertyExpression, toExpression);
@@ -77,7 +77,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
         );
     }
 
-    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, NumberCondition condition)
+    private Expression<Func<T, bool>> GetComparisonExpression<T>(string property, NumberCondition condition, bool conditionalAccess)
     {
         if (string.IsNullOrEmpty(condition.Filter))
             throw new ArgumentException("Filter value is required.");
@@ -88,7 +88,7 @@ public class NumberFilterBuilder : IPropertyFilterBuilder<NumberCondition>
         var fromExpression = Expression.Constant(from, propertyType);
 
         var parameter = Expression.Parameter(typeof(T), "x");
-        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType, conditionalAccess);
 
         return condition.Type switch
         {

@@ -6,13 +6,12 @@ namespace Ctoss.Builders.Filters;
 
 internal class SetFilterBuilder : IPropertyFilterBuilder<SetCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, SetCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, SetCondition condition, bool conditionalAccess)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
-        
         // Build: x => x.Property.Contains(condition.Filter)
         var propertyType = IPropertyBuilder.GetPropertyType<T>(property);
-        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType);
+        var propertyExpression = IPropertyBuilder.GetPropertyExpression<T>(property, parameter, propertyType, conditionalAccess);
         
         var valueExpression = GetContainsExpression(condition.Values, propertyExpression, propertyType);
 

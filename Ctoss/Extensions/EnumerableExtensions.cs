@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Linq.Expressions;
+using System.Text.Json;
 using Ctoss.Builders.Filters;
 using Ctoss.Builders.Sorting;
 using Ctoss.Json;
@@ -43,7 +44,7 @@ public static class EnumerableExtensions
         for (var i = 0; i < sortings.Count; i++)
         {
             var sorting = sortings[i];
-            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting);
+            var sortingExpression = sortingBuilder.BuildSortingExpressionV2<T>(sorting, true);
             if (sortingExpression is null)
                 continue;
 
@@ -88,12 +89,12 @@ public static class EnumerableExtensions
             return query;
 
         var filterBuilder = new FilterBuilder();
-        var predicate = filterBuilder.GetExpression<T>(filterSet);
+        var predicate = filterBuilder.GetExpression<T>(filterSet, true);
 
         if (predicate is null)
             throw new ArgumentException("Invalid filter");
 
-        return query.Where(predicate.Compile());
+        return query.AsQueryable().Where(predicate);
     }
 
     #endregion

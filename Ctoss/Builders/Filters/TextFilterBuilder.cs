@@ -7,11 +7,11 @@ namespace Ctoss.Builders.Filters;
 
 public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
 {
-    public Expression<Func<T, bool>> GetExpression<T>(string property, TextCondition condition)
+    public Expression<Func<T, bool>> GetExpression<T>(string property, TextCondition condition, bool conditionalAccess)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
         var propertyExpression = IPropertyFilterBuilder<T>
-            .GetPropertyExpression<T>(property, parameter, typeof(string));
+            .GetPropertyExpression<T>(property, parameter, typeof(string), conditionalAccess);
         propertyExpression = Expression.Coalesce(propertyExpression, Expression.Constant(string.Empty));
         var valueExpression = Expression.Constant(condition.Filter);
 

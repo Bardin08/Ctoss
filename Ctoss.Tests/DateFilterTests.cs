@@ -26,7 +26,7 @@ public class DateFilterTests
             Type = "equals"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -43,7 +43,7 @@ public class DateFilterTests
             Type = "GreaterThan"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -59,7 +59,7 @@ public class DateFilterTests
             Type = "Blank"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Empty(result);
@@ -75,7 +75,7 @@ public class DateFilterTests
             Type = "LessThan"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -91,7 +91,7 @@ public class DateFilterTests
             Type = "NotBlank"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Equal(3, result.Count);
@@ -108,7 +108,7 @@ public class DateFilterTests
             Type = "InRange"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Equal(3, result.Count);
@@ -137,7 +137,7 @@ public class DateFilterTests
             Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -171,7 +171,7 @@ public class DateFilterTests
             }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("DateTimeProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);

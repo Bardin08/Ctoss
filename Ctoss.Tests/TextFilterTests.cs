@@ -22,6 +22,10 @@ public class TextFilterTests
         new TestEntity
         {
             NumericProperty = 30, StringProperty = "ghi", DateTimeProperty = new DateOnly(2024, 3, 3)
+        },
+        new TestEntity()
+        {
+            NumericProperty = 30, StringProperty = null, DateTimeProperty = new DateOnly(2024, 3, 3)
         }
     ];
 
@@ -35,7 +39,7 @@ public class TextFilterTests
             Type = "Equals"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -52,7 +56,7 @@ public class TextFilterTests
             Type = "StartsWith"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -69,7 +73,7 @@ public class TextFilterTests
             Type = "EndsWith"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -85,7 +89,7 @@ public class TextFilterTests
             Type = "NotBlank"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Equal("abc", result.First().StringProperty);
@@ -101,7 +105,7 @@ public class TextFilterTests
             Type = "Contains"
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -131,7 +135,7 @@ public class TextFilterTests
             Conditions = new List<FilterConditionBase> { condition1, condition2 }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);
@@ -165,7 +169,7 @@ public class TextFilterTests
             }
         };
 
-        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter)!;
+        var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
 
         Assert.Single(result);

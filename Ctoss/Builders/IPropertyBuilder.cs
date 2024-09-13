@@ -9,7 +9,7 @@ internal interface IPropertyBuilder
 {
     private static readonly BindingFlags Flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
     
-    static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter)
+    static Expression GetCompletePropertyExpression<T>(string property, ParameterExpression parameter, bool conditionalAccess)
     {
         // NOTE: first of all, we're trying to get a real property name from the given one.
         // If we find it, we can use it to work with an expression. Else the given property name will be used.
@@ -23,13 +23,14 @@ internal interface IPropertyBuilder
             ? typeof(Nullable<>).MakeGenericType(propertyType)
             : propertyType;
         
-        return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType);
+        return GetPropertyExpression<T>(propertyName, parameter, nullablePropertyType, conditionalAccess);
     }
     
     static Expression GetPropertyExpression<T>(
         string property,
         ParameterExpression parameter,
-        Type propertyType)
+        Type propertyType,
+        bool conditionalAccess)
     {
         var customMapping = CtossSettings.GetPropertyMapping<T>(property);
         Expression propertyRawExpression;
@@ -37,7 +38,22 @@ internal interface IPropertyBuilder
         if (customMapping == null)
         {
             var parts = property.Split('.');
-            propertyRawExpression = parts.Aggregate((Expression)parameter, Expression.Property);
+            Expression prop = parameter;
+            foreach (var p in parts)
+            {
+                if (!conditionalAccess)
+                {
+                    prop = Expression.Property(prop, p);
+                }
+                else
+                {
+                    var propExp = Expression.PropertyOrField(prop, p);
+                    var t = propExp.Type;
+                    prop = Expression.Condition(Expression.Equal(prop, Expression.Constant(null)), Expression.Default(t), propExp);
+                }
+            }
+
+            propertyRawExpression = prop;
         }
         else
         {

@@ -1,5 +1,9 @@
 ﻿namespace Ctoss.Tests.Models;
 
+public class NestedEntity
+{
+    public int? NumericProperty { get; set; }
+}
 public class TestEntity
 {
     public TestEntity()
@@ -16,4 +20,6 @@ public class TestEntity
     public string? StringProperty { get; set; } = null!;
     public DateOnly DateTimeProperty { get; set; }
     public int? NumericProperty { get; set; }
+    
+    public NestedEntity? ObjectProperty { get; set; }
 }
