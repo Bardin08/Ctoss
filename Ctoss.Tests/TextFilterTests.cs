@@ -137,9 +137,9 @@ public class TextFilterTests
 
         var expr = _filterBuilder.GetExpression<TestEntity>("StringProperty", filter, true)!;
         var result = _testEntities.AsQueryable().Where(expr).ToList();
-
-        Assert.Single(result);
-        Assert.Equal("def", result.First().StringProperty);
+        var expected = _testEntities.Where(x => x.StringProperty != "abc" && x.StringProperty != "ghi").ToList();
+        
+        Assert.True(result.SequenceEqual(expected));
     }
 
     [Fact]

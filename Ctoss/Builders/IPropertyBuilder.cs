@@ -41,15 +41,14 @@ internal interface IPropertyBuilder
             Expression prop = parameter;
             foreach (var p in parts)
             {
+                var propExp = Expression.PropertyOrField(prop, p);
                 if (!conditionalAccess)
                 {
-                    prop = Expression.Property(prop, p);
+                    prop = propExp;
                 }
                 else
                 {
-                    var propExp = Expression.PropertyOrField(prop, p);
-                    var t = propExp.Type;
-                    prop = Expression.Condition(Expression.Equal(prop, Expression.Constant(null)), Expression.Default(t), propExp);
+                    prop = CanBeNull(propExp.Type) ? Expression.Condition(Expression.Equal(prop, Expression.Constant(null)), Expression.Default(propExp.Type), propExp) : propExp;
                 }
             }
 
@@ -88,5 +87,26 @@ internal interface IPropertyBuilder
             var type = GetPropertyType(entityType, parts[0]);
             return GetPropertyType(type, string.Join(".", parts.Skip(1)));
         }
+    }
+    
+    private static bool CanBeNull(Type type)
+    {
+        if (type == null)
+            throw new ArgumentNullException(nameof(type));
+
+        // Check if it's a reference type
+        if (type.IsClass)
+            return true;
+
+        // Check if it's a nullable value type
+        if (type.IsValueType)
+        {
+            // Check if it's a nullable type
+            if (Nullable.GetUnderlyingType(type) != null)
+                return true;
+        }
+
+        // Otherwise, the type cannot be null
+        return false;
     }
 }
