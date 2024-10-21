@@ -1,4 +1,5 @@
 ﻿using Ctoss.Builders.Filters;
+using Ctoss.Configuration.Builders;
 using Ctoss.Extensions;
 using Ctoss.Models;
 using Ctoss.Models.AgGrid;
@@ -22,6 +23,19 @@ public class SortingTest
         },
     ];
 
+    [Fact]
+    public void Enumerable_CustomSort_Success()
+    {
+        var bases = new Dictionary<string, string>() { ["abc"] = "rank1", ["def"] = "rank2", ["ghi"] = "rank3" };
+        var values = new Dictionary<string, int>() { ["rank1"] = 100, ["rank2"] = 200, ["rank3"] = 300 };
+        CtossSettingsBuilder.Create()
+            .Entity<TestEntity>()
+            .Property("Virtual", x => bases[x.StringProperty], a => a.SortValueExpression = (string x) => -values[x])
+            .Apply();
+        var filter = new AgGridQuery(0, 100, [new Sorting() { Property = "Virtual", Order = SortingOrder.Desc }], []);
+        var result = _testEntities.Apply(filter);
+        Assert.True(result.Rows.SequenceEqual(_testEntities.OrderByDescending(x => -values[bases[x.StringProperty]])));
+    }
 
     [Fact]
     public void Enumerable_SingleProperty_Success()
