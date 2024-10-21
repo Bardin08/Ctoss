@@ -15,7 +15,7 @@ public class TypeSettingsBuilder<TEntity>
     public TypeSettingsBuilder<TEntity> Property<TProp>(
         string name,
         Expression<Func<TEntity, TProp?>> propertyExpression,
-        Action<PropertySettings>? propertyConfigurator = null)
+        Action<PropertySettings<TEntity, TProp>>? propertyConfigurator = null)
     {
         var convertedExpression = Expression.Lambda<Func<TEntity, object?>>(
             Expression.Convert(propertyExpression.Body, typeof(object)),
@@ -25,25 +25,28 @@ public class TypeSettingsBuilder<TEntity>
         if (propertyConfigurator == null)
             return this;
 
-        var propSettings = new PropertySettings();
+        var propSettings = new PropertySettings<TEntity, TProp>();
         propertyConfigurator(propSettings);
         _typeSettings.PropertySettings[name] = propSettings;
 
         return this;
     }
 
-    public TypeSettingsBuilder<TEntity> Property(
-        Expression<Func<TEntity, object?>> propertyExpression,
+    public TypeSettingsBuilder<TEntity> Property<TProp>(
+        Expression<Func<TEntity, TProp>> propertyExpression,
         Action<PropertySettings>? propertyConfigurator = null)
     {
         var propertyName = ((MemberExpression)propertyExpression.Body).Member.Name;
-        _typeSettings.PropertyMappings.Properties[propertyName] =
-            (propertyExpression as Expression<Func<TEntity, object?>>)!;
+        var convertedExpression = Expression.Lambda<Func<TEntity, object?>>(
+            Expression.Convert(propertyExpression.Body, typeof(object)),
+            propertyExpression.Parameters);
+        
+        _typeSettings.PropertyMappings.Properties[propertyName] = convertedExpression;
 
         if (propertyConfigurator == null)
             return this;
 
-        var propSettings = new PropertySettings();
+        var propSettings = new PropertySettings<TEntity, TProp>();
         propertyConfigurator(propSettings);
         _typeSettings.PropertySettings[propertyName] = propSettings;
 
