@@ -34,7 +34,7 @@ public class TypeSettingsBuilder<TEntity>
 
     public TypeSettingsBuilder<TEntity> Property<TProp>(
         Expression<Func<TEntity, TProp>> propertyExpression,
-        Action<PropertySettings>? propertyConfigurator = null)
+        Action<PropertySettings<TEntity, TProp>>? propertyConfigurator = null)
     {
         var propertyName = ((MemberExpression)propertyExpression.Body).Member.Name;
         var convertedExpression = Expression.Lambda<Func<TEntity, object?>>(
