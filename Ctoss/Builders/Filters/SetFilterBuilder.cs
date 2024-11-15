@@ -27,8 +27,18 @@ internal class SetFilterBuilder : IPropertyFilterBuilder<SetCondition>
 
     private Expression GetContainsExpressionGeneric<T>(Expression propertyExpression, List<string> conditionValues)
     {
-        var set = new HashSet<T>(conditionValues.Select(x => (T)Convert.ChangeType(x, typeof(T))));
+        var set = new HashSet<T>(conditionValues.Select(ConvertTo<T>));
         var setExpression = Expression.Constant(set);
         return Expression.Call(setExpression, typeof(HashSet<T>).GetMethod("Contains")!, propertyExpression);
+    }
+
+    private T ConvertTo<T>(string s)
+    {
+        if (typeof(T).IsEnum)
+        {
+            return (T)Enum.Parse(typeof(T), s);
+        }
+
+        return (T)Convert.ChangeType(s, typeof(T));
     }
 }
