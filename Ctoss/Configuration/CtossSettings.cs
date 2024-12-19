@@ -6,6 +6,14 @@ namespace Ctoss.Configuration;
 public static class CtossSettings
 {
     public static Dictionary<Type, ITypeSettings> TypeSettings { get; set; } = new();
+    
+    internal static TypeSettings<T>? GetTypeSettings<T>()
+    {
+        var hasTypeConfiguration = TypeSettings.ContainsKey(typeof(T));
+        return hasTypeConfiguration
+            ? TypeSettings[typeof(T)] as TypeSettings<T>
+            : null;
+    }
 
     internal static Expression<Func<TEntity, object?>>? GetPropertyMapping<TEntity>(string propertyName)
     {
