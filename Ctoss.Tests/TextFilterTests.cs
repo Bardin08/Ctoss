@@ -1,4 +1,6 @@
 ﻿using Ctoss.Builders.Filters;
+using Ctoss.Configuration;
+using Ctoss.Configuration.Builders;
 using Ctoss.Models.Enums;
 using Ctoss.Models.V2;
 using Ctoss.Tests.Models;
@@ -28,6 +30,35 @@ public class TextFilterTests
             NumericProperty = 30, StringProperty = null, DateTimeProperty = new DateOnly(2024, 3, 3)
         }
     ];
+    
+    private record IgnoreCaseEntity(string StringProperty);
+
+    [Fact]
+    public void TextFilter_IgnoreCase_Success()
+    {
+        var dataSet = new IgnoreCaseEntity[]
+        {
+            new("Test"),
+            new("test"),
+            new("TEST"),
+            new("tEst"),
+            new("other"),
+        };
+        CtossSettingsBuilder.Create()
+            .Entity<IgnoreCaseEntity>()
+            .IgnoreCaseForEntity(true)
+            .Apply();
+        var filter = new FilterModel
+        {
+            Filter = "te",
+            FilterType = "text",
+            Type = "Contains"
+        };
+        
+        var expr = _filterBuilder.GetExpression<IgnoreCaseEntity>("StringProperty", filter, true)!;
+        var result = dataSet.AsQueryable().Where(expr).ToList();
+        Assert.True(dataSet.Where(p => p.StringProperty.Contains("tE", StringComparison.OrdinalIgnoreCase)).SequenceEqual(result));
+    }
 
     [Fact]
     public void TextFilter_Equals_Success()

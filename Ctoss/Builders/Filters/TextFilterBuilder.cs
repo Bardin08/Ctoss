@@ -55,7 +55,8 @@ public class TextFilterBuilder : IPropertyFilterBuilder<TextCondition>
         ref ConstantExpression valueExpression)
     {
         var propertySettings = CtossSettings.GetPropertySettings<T>(property);
-        if (propertySettings is not { IgnoreCase: true })
+        var typeSettings = CtossSettings.GetTypeSettings<T>();
+        if (propertySettings is not { IgnoreCase: true } && typeSettings is not {IgnoreCase: true})
         {
             return;
         }
